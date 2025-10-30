@@ -363,10 +363,17 @@ public class VentanaInicio extends JFrame {
             case 2: // Cambiar imagen
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setDialogTitle("Seleccionar imagen de perfil");
+
+                // 🔹 Establecer carpeta inicial
+                File carpetaInicial = new File("resources/images");
+                if (carpetaInicial.exists()) {
+                    fileChooser.setCurrentDirectory(carpetaInicial);
+                }
+
                 FileNameExtensionFilter filtro = new FileNameExtensionFilter(
                     "Imágenes (*.jpg, *.png, *.gif)", "jpg", "png", "gif", "jpeg");
                 fileChooser.setFileFilter(filtro);
-                
+
                 int resultado = fileChooser.showOpenDialog(this);
                 if (resultado == JFileChooser.APPROVE_OPTION) {
                     File archivoSeleccionado = fileChooser.getSelectedFile();
@@ -375,6 +382,7 @@ public class VentanaInicio extends JFrame {
                     actualizarPerfiles();
                 }
                 break;
+
 
             case 3: // Eliminar imagen
                 perfil.setImagen(null);
@@ -412,7 +420,8 @@ public class VentanaInicio extends JFrame {
             "Entrando con el perfil: " + cliente.getNombre() + " " + cliente.getApellido(), 
             "Acceso", 
             JOptionPane.INFORMATION_MESSAGE);
-        
+        new VentanaPeliculasSeries();
+        this.dispose();
     }
 
 }
