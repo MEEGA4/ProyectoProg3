@@ -8,7 +8,7 @@ public class VentanaInicio extends JFrame{
 	
 	public VentanaInicio() {
 		
-		ImageIcon im = new ImageIcon("resources/images/logo.jpeg");
+		ImageIcon im = new ImageIcon("resources/images/logo.png");
 		setIconImage(im.getImage());
         
         
