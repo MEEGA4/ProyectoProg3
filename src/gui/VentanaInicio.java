@@ -12,6 +12,9 @@ public class VentanaInicio extends JFrame{
 		setIconImage(im.getImage());
         
         
+		setTitle("Inicio Sesión");
+		
+		
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(300, 200, 600, 400);
         setLocationRelativeTo(null);
