@@ -80,9 +80,9 @@ public class VentanaInicio extends JFrame {
         pCentro.add(Box.createVerticalStrut(40));
 
         // Panel con los perfiles
-        panelPerfiles = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
+        panelPerfiles = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
         panelPerfiles.setBackground(Color.BLACK);
-
+        
         actualizarPerfiles();
 
         pCentro.add(panelPerfiles);
