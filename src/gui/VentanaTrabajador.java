@@ -240,13 +240,4 @@ public class VentanaTrabajador extends JFrame {
             }
         }
     }
-
-    // ===== Main de prueba =====
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            Trabajador trabajador = new Trabajador("Carlos", "López", 35, "admin",
-                    "Madrid", "Gerente", 35000);
-            new VentanaTrabajador(trabajador);
-        });
-    }
 }
