@@ -423,5 +423,10 @@ public class VentanaInicio extends JFrame {
         new VentanaPeliculasSeries();
         this.dispose();
     }
+    
+    public static void main(String[] args) {
+		new VentanaInicio();
+	}
+    
 
 }

@@ -2,7 +2,8 @@ package main;
 
 import javax.swing.SwingUtilities;
 
-import gui.VentanaInicio;
+
+import gui.VentanaSeleccion;
 
 
 public class Main {
@@ -10,7 +11,7 @@ public class Main {
 	
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(() -> {
-            VentanaInicio ventanaHistorial = new VentanaInicio();
+            VentanaSeleccion ventana = new VentanaSeleccion();
         });
 	}
 }
