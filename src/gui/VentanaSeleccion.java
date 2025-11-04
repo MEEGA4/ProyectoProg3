@@ -184,18 +184,8 @@ public class VentanaSeleccion extends JFrame {
     private void abrirMenuCliente() {
         SwingUtilities.invokeLater(() -> {
             Cliente cliente = (Cliente) usuarioActual;
-            // Temporal: muestra mensaje hasta que crees VentanaCliente
-            JOptionPane.showMessageDialog(this, 
-                "Bienvenido al sistema, " + cliente.getNombre() + "!\n" +
-                "La ventana de cliente aún no está implementada.", 
-                "Panel Cliente", 
-                JOptionPane.INFORMATION_MESSAGE);
-            
-            // Cuando crees VentanaCliente, descomenta estas líneas:
-            // VentanaCliente ventana = new VentanaCliente(cliente);
-            // this.dispose();
-            
-            System.out.println("Abriendo menú de cliente para: " + cliente.getNombre());
+            new VentanaInicio(cliente); // Pasar el cliente autenticado
+            this.dispose(); // Cerrar la ventana de selección
         });
     }
 
@@ -232,4 +222,9 @@ public class VentanaSeleccion extends JFrame {
         }
     }
 
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            new VentanaSeleccion();
+        });
+    }
 }
