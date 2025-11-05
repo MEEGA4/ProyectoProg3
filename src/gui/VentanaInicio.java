@@ -48,7 +48,7 @@ public class VentanaInicio extends JFrame {
         setLocationRelativeTo(null);
         
         // Fondo negro
-        getContentPane().setBackground(Color.BLACK);
+        getContentPane().setBackground(new Color(33, 37, 41));
 
         // Inicializar lista de perfiles con el cliente que inició sesión
         perfiles = new ArrayList<>();
@@ -58,7 +58,7 @@ public class VentanaInicio extends JFrame {
         // Panel central con todo el contenido
         pCentro = new JPanel();
         pCentro.setLayout(new BoxLayout(pCentro, BoxLayout.Y_AXIS));
-        pCentro.setBackground(Color.BLACK);
+        pCentro.setBackground(new Color(33, 37, 41));
 
         // Espaciado superior
         pCentro.add(Box.createVerticalStrut(30));
@@ -74,7 +74,7 @@ public class VentanaInicio extends JFrame {
 
         // Logo DEUSTOFILM
         JLabel labelMarca = new JLabel("DEUSTOFILM");
-        labelMarca.setForeground(new Color(229, 9, 20));
+        labelMarca.setForeground(new Color(255, 193, 7));
         labelMarca.setFont(new Font("Arial", Font.BOLD, 48));
         labelMarca.setAlignmentX(CENTER_ALIGNMENT);
         pCentro.add(labelMarca);
@@ -83,7 +83,7 @@ public class VentanaInicio extends JFrame {
 
         // Panel con los perfiles
         panelPerfiles = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
-        panelPerfiles.setBackground(Color.BLACK);
+        panelPerfiles.setBackground(new Color(33, 37, 41));
         
         actualizarPerfiles();
 

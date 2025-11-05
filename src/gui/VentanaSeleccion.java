@@ -43,14 +43,14 @@ public class VentanaSeleccion extends JFrame {
         botonTrabajador = new JButton("SOY TRABAJADOR");
         lblBienvenida = new JLabel("¿Cómo deseas acceder?");
         lblBienvenida.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 18));
-        lblBienvenida.setForeground(Color.RED);
+        lblBienvenida.setForeground(Color.WHITE);
         
         pAbajo = new JPanel();
         pCentro = new JPanel();
         
         // Configuración de colores de fondo
-        pCentro.setBackground(Color.BLACK);
-        pAbajo.setBackground(Color.BLACK);
+        pCentro.setBackground(new Color(33, 37, 41));
+        pAbajo.setBackground(new Color(33, 37, 41));
         
         // Añadir componentes a los paneles
         pCentro.add(lblBienvenida);
@@ -59,8 +59,8 @@ public class VentanaSeleccion extends JFrame {
         pAbajo.add(botonCerrar);
 
         // Aplicar estilos a los botones
-        anadirColores(pCentro.getComponents(), Color.RED);
-        anadirColores(pAbajo.getComponents(), Color.RED); 
+        anadirColores(pCentro.getComponents(), new Color(255, 193, 7));
+        anadirColores(pAbajo.getComponents(), new Color(255, 193, 7)); 
         
         // Añadir paneles al frame
         getContentPane().add(pAbajo, BorderLayout.SOUTH);
