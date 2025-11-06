@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -130,6 +131,22 @@ public class VentanaTrabajador extends JFrame {
             VentanaSeleccion ventana = new VentanaSeleccion();
             ventana.setVisible(true);
             this.dispose();
+        });
+        btnVisualizarPeliculas.addActionListener(e -> {
+            List<Pelicula> pelis = new ArrayList<>();
+            for (Producto prod : productos) {
+                if (prod instanceof Pelicula) pelis.add((Pelicula) prod);
+            }
+            List<String> cols = Arrays.asList("Nombre", "Descripción", "Precio", "Stock", "Director", "Género", "Duración");
+            new VentanaPeliculasTabla(cols, pelis);
+        });
+        btnVisualizarSeries.addActionListener(e -> {
+            List<Serie> series = new ArrayList<>();
+            for (Producto prod : productos) {
+                if (prod instanceof Serie) series.add((Serie) prod);
+            }
+            List<String> cols = Arrays.asList("Nombre", "Descripción", "Precio", "Stock", "Género", "Temporadas", "Episodios");
+            new VentanaSeriesTabla(cols, series);
         });
         btnVolver.addActionListener(e -> System.exit(0));
 
