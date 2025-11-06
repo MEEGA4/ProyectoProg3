@@ -420,6 +420,7 @@ public class VentanaInicio extends JFrame {
             "Entrando con el perfil: " + cliente.getNombre() + " " + cliente.getApellido(), 
             "Acceso", 
             JOptionPane.INFORMATION_MESSAGE);
+
         new VentanaPeliculasSeries();
         this.dispose();
     }
