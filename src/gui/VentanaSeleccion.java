@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ public class VentanaSeleccion extends JFrame {
         lblBienvenida.setForeground(Color.WHITE);
         
         pAbajo = new JPanel();
-        pCentro = new JPanel();
+        pCentro = new JPanel(new GridLayout(3, 1, 10, 10));
         
         // Configuración de colores de fondo
         pCentro.setBackground(new Color(33, 37, 41));
@@ -64,7 +65,7 @@ public class VentanaSeleccion extends JFrame {
         
         // Añadir paneles al frame
         getContentPane().add(pAbajo, BorderLayout.SOUTH);
-        getContentPane().add(pCentro, BorderLayout.CENTER);
+        getContentPane().add(pCentro);
 
         // Inicializar listas
         inicializarListas();
