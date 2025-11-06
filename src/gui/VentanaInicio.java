@@ -36,8 +36,11 @@ public class VentanaInicio extends JFrame {
     private static final int MAX_PERFILES = 5;
     private boolean modoEdicion = false;
     private JButton btnGestionarPerfiles;
+    private Cliente clientePrincipal; // Cliente que inició sesión
 
-    public VentanaInicio() {
+    public VentanaInicio(Cliente cliente) {
+        this.clientePrincipal = cliente;
+        
         ImageIcon im = new ImageIcon("resources/images/logo.png");
         setIconImage(im.getImage());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -45,18 +48,17 @@ public class VentanaInicio extends JFrame {
         setLocationRelativeTo(null);
         
         // Fondo negro
-        getContentPane().setBackground(Color.BLACK);
+        getContentPane().setBackground(new Color(33, 37, 41));
 
-        // Inicializar lista de perfiles con uno por defecto
+        // Inicializar lista de perfiles con el cliente que inició sesión
         perfiles = new ArrayList<>();
-        // Cliente por defecto (puedes modificar los datos según necesites)
-        Cliente clienteDefault = new Cliente("Usuario", "Principal", 25, "1234", "Bilbao", "123456789", "usuario@deustofilm.com");
-        perfiles.add(new PerfilCliente(clienteDefault, new Color(229, 9, 20), null));
+        // Usar el cliente autenticado como perfil principal
+        perfiles.add(new PerfilCliente(clientePrincipal, new Color(229, 9, 20), null));
 
         // Panel central con todo el contenido
         pCentro = new JPanel();
         pCentro.setLayout(new BoxLayout(pCentro, BoxLayout.Y_AXIS));
-        pCentro.setBackground(Color.BLACK);
+        pCentro.setBackground(new Color(33, 37, 41));
 
         // Espaciado superior
         pCentro.add(Box.createVerticalStrut(30));
@@ -72,7 +74,7 @@ public class VentanaInicio extends JFrame {
 
         // Logo DEUSTOFILM
         JLabel labelMarca = new JLabel("DEUSTOFILM");
-        labelMarca.setForeground(new Color(229, 9, 20));
+        labelMarca.setForeground(new Color(255, 193, 7));
         labelMarca.setFont(new Font("Arial", Font.BOLD, 48));
         labelMarca.setAlignmentX(CENTER_ALIGNMENT);
         pCentro.add(labelMarca);
@@ -80,9 +82,9 @@ public class VentanaInicio extends JFrame {
         pCentro.add(Box.createVerticalStrut(40));
 
         // Panel con los perfiles
-        panelPerfiles = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
-        panelPerfiles.setBackground(Color.BLACK);
-
+        panelPerfiles = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
+        panelPerfiles.setBackground(new Color(33, 37, 41));
+        
         actualizarPerfiles();
 
         pCentro.add(panelPerfiles);
@@ -298,15 +300,14 @@ public class VentanaInicio extends JFrame {
             JOptionPane.PLAIN_MESSAGE);
 
         if (nombrePerfil != null && !nombrePerfil.trim().isEmpty()) {
-            // Crear un nuevo cliente para el perfil
-            // Puedes ajustar estos valores por defecto o pedir más información
+            // Crear un nuevo cliente para el perfil usando datos base del cliente principal
             Cliente nuevoCliente = new Cliente(
                 nombrePerfil.trim(), 
-                "Apellido", 
+                clientePrincipal.getApellido(), 
                 18, 
-                "1234", 
-                "Bilbao", 
-                "000000000", 
+                clientePrincipal.getContrasena(), 
+                clientePrincipal.getUbicacion(), 
+                clientePrincipal.getTelefono(), 
                 nombrePerfil.toLowerCase() + "@deustofilm.com"
             );
 
@@ -363,10 +364,17 @@ public class VentanaInicio extends JFrame {
             case 2: // Cambiar imagen
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setDialogTitle("Seleccionar imagen de perfil");
+
+                // Establecer carpeta inicial
+                File carpetaInicial = new File("resources/images");
+                if (carpetaInicial.exists()) {
+                    fileChooser.setCurrentDirectory(carpetaInicial);
+                }
+
                 FileNameExtensionFilter filtro = new FileNameExtensionFilter(
                     "Imágenes (*.jpg, *.png, *.gif)", "jpg", "png", "gif", "jpeg");
                 fileChooser.setFileFilter(filtro);
-                
+
                 int resultado = fileChooser.showOpenDialog(this);
                 if (resultado == JFileChooser.APPROVE_OPTION) {
                     File archivoSeleccionado = fileChooser.getSelectedFile();
@@ -412,8 +420,8 @@ public class VentanaInicio extends JFrame {
             "Entrando con el perfil: " + cliente.getNombre() + " " + cliente.getApellido(), 
             "Acceso", 
             JOptionPane.INFORMATION_MESSAGE);
-        
-        
-    }
 
+        new VentanaPeliculasSeries();
+        this.dispose();
+    }
 }
