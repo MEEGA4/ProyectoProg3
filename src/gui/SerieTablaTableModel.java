@@ -33,11 +33,11 @@ public class SerieTablaTableModel extends AbstractTableModel {
     @Override public Object getValueAt(int rowIndex, int columnIndex) {
         Serie s = data.get(rowIndex);
         switch (columnIndex) {
-            case 0: return s.getId();
-            case 1: return s.getTitulo();
+            case 0: return s.getNombre();
+            case 1: return s.getDescripcion();
             case 2: return s.getTemporadas();
             case 3: return s.getGenero();
-            case 4: return s.getEstado();
+            case 4: return s.getStock();
             default: return null;
         }
     }

@@ -36,12 +36,13 @@ public class PeliculaTablaTableModel extends AbstractTableModel {
     @Override public Object getValueAt(int rowIndex, int columnIndex) {
         Pelicula p = data.get(rowIndex);
         switch (columnIndex) {
-            case 0: return p.getId();
-            case 1: return p.getTitulo();
-            case 2: return p.getDuracionMin();
-            case 3: return p.getGenero();
-            case 4: return p.getAnio();
-            case 5: return p.getCalificacion();
+            case 0: return p.getDescripcion();
+            case 1: return p.getDirector();
+            case 2: return p.getGenero();
+            case 3: return p.getNombre();
+            case 4: return p.getDuracion();
+            case 5: return p.getPrecio();
+            case 6: return p.getStock();
             default: return null;
         }
     }
