@@ -211,9 +211,9 @@ public class VentanaTrabajador extends JFrame {
             List<ImageIcon> listaImagenes = new ArrayList<>();
             String[] rutas = {
                     "resources/images/batman.jpeg",
-                    "resources/images/rocky.jpg",
+                    "resources/images/rocky.jpeg",
                     "resources/images/titanic.jpg",
-                    "resources/images/productos.jpg"
+                    "resources/images/silencioDeLosCorderos.jpg"
             };
 
             for (String ruta : rutas) {
