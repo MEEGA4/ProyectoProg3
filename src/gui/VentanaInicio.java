@@ -413,6 +413,7 @@ public class VentanaInicio extends JFrame {
             "Acceso", 
             JOptionPane.INFORMATION_MESSAGE);
         
+        
     }
 
 }
