@@ -14,7 +14,7 @@ public class VentanaPeliculasSeries extends JFrame{
 	private static final long serialVersionUID = 1L;
 	
 	JPanel panelCentro, panelOeste, pNorte;
-	JButton lblTodo, lblPeliculas, lblSeries;
+	JLabel lblTodo, lblPeliculas, lblSeries;
 	
 	public VentanaPeliculasSeries() {
 		
@@ -27,9 +27,14 @@ public class VentanaPeliculasSeries extends JFrame{
 		
 		
 		panelOeste = new JPanel(new GridLayout(3,1, 200, 200));
-		lblTodo = new JButton("Todo");
-		lblPeliculas = new JButton("Peliculas");
-		lblSeries = new JButton("Series");
+		
+		lblTodo = new JLabel("Todo");
+		lblTodo.setHorizontalAlignment(JLabel.CENTER);
+		lblPeliculas = new JLabel("Peliculas");
+		lblPeliculas.setHorizontalAlignment(JLabel.CENTER);
+		lblSeries = new JLabel("Series");
+		lblSeries.setHorizontalAlignment(JLabel.CENTER);
+		
 		panelOeste.add(lblTodo);
 		panelOeste.add(lblPeliculas);
 		panelOeste.add(lblSeries);
