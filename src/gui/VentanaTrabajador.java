@@ -79,6 +79,7 @@ public class VentanaTrabajador extends JFrame {
         btnUsuario = crearBotonSuperior("MI PERFIL", colorBoton, texto);
         btnSesion = crearBotonSuperior("CERRAR SESIÓN", colorBoton, texto);
         btnVolver = crearBotonSuperior("SALIR", colorBoton, texto);
+        
 
         panelSuperior.add(btnUsuario);
         panelSuperior.add(btnSesion);
@@ -149,6 +150,17 @@ public class VentanaTrabajador extends JFrame {
             new VentanaSeriesTabla(cols, series);
         });
         btnVolver.addActionListener(e -> System.exit(0));
+        
+        btnVisualizarProductos.addActionListener(e -> {
+            List<String> cols = Arrays.asList("Tipo", "Nombre", "Descripción", "Precio", "Stock", 
+                                              "Director", "Género", "Duración", "Temporadas", "Episodios");
+            new VentanaProductosTabla(cols, productos);
+        });
+        
+        btnVisualizarClientes.addActionListener(e -> {
+            List<String> cols = Arrays.asList("Nombre", "Apellido", "Edad", "Ubicación", "Teléfono", "Email");
+            new VentanaClientesTabla(cols, clientes);
+        });
 
         setLocationRelativeTo(null);
         setVisible(true);
