@@ -38,7 +38,7 @@ public class VentanaPeliculasSeries extends JFrame{
 		panelOeste.add(lblTodo);
 		panelOeste.add(lblPeliculas);
 		panelOeste.add(lblSeries);
-			
+		
 		pNorte = new JPanel();
 		
 		getContentPane().add(panelCentro, BorderLayout.CENTER);
