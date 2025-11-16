@@ -1,60 +1,202 @@
 package gui;
-
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
-
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
-public class VentanaPeliculasSeries extends JFrame{
-	
-	
-	private static final long serialVersionUID = 1L;
-	
-	JPanel panelCentro, panelOeste, pNorte;
-	JLabel lblTodo, lblPeliculas, lblSeries;
-	
-	public VentanaPeliculasSeries() {
-		
-		//Esta ventana mostrará las películas y series disponibles en la plataforma
-		
-		
-		setTitle("Películas y Series");
-		
-		panelCentro = new JPanel();
-		
-		
-		panelOeste = new JPanel(new GridLayout(3,1, 200, 200));
-		
-		lblTodo = new JLabel("Todo");
-		lblTodo.setHorizontalAlignment(JLabel.CENTER);
-		lblPeliculas = new JLabel("Peliculas");
-		lblPeliculas.setHorizontalAlignment(JLabel.CENTER);
-		lblSeries = new JLabel("Series");
-		lblSeries.setHorizontalAlignment(JLabel.CENTER);
-		
-		panelOeste.add(lblTodo);
-		panelOeste.add(lblPeliculas);
-		panelOeste.add(lblSeries);
-		
-		pNorte = new JPanel();
-		
-		getContentPane().add(panelCentro, BorderLayout.CENTER);
-		getContentPane().add(panelOeste, BorderLayout.WEST);
-		getContentPane().add(pNorte, BorderLayout.NORTH);
-
-		
-		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(300, 200, 800, 600);
-		setLocationRelativeTo(null);
-		
-		setVisible(true);
-	}
-	
-	public static void main(String[] args) {
-		new VentanaPeliculasSeries();
-	}
+public class VentanaPeliculasSeries extends JFrame {
+    
+    private static final long serialVersionUID = 1L;
+    
+    JPanel panelCentro, pNorte;
+    
+    // Arrays con nombres de películas y series
+    private String[] peliculas = {"batman","rocky", "silencioDeLosCorderos", "titanic", "Avatar", "Titanic", "Inception", "Gladiator", "Matrix", "Interstellar", 
+                                  "The Shawshank Redemption", "Pulp Fiction", "Forrest Gump", "The Dark Knight"};
+    private String[] series = {"Breaking Bad", "Game of Thrones", "Stranger Things", "The Crown", "Friends", 
+                              "The Office", "Chernobyl", "Black Mirror", "The Mandalorian", "Succession"};
+    
+    // Índices para el scroll
+    private int indiceTodo = 0;
+    private int indicePeliculas = 0;
+    private int indiceSeries = 0;
+    private final int ITEMS_POR_FILA = 6;
+    
+    // Paleta de colores de VentanaInicio
+    private final Color COLOR_FONDO = new Color(33, 37, 41);
+    private final Color COLOR_TEXTO = Color.WHITE;
+    private final Color COLOR_TEXTO_SECUNDARIO = Color.GRAY;
+    private final Color COLOR_BOTON = new Color(50, 50, 50);
+    private final Color COLOR_BOTON_HOVER = new Color(80, 80, 80);
+    private final Color COLOR_AMARILLO = new Color(255, 193, 7);
+    
+    public VentanaPeliculasSeries() {
+        
+        setTitle("DEUSTOFILM - Películas y Series");
+        
+        // Fondo negro
+        getContentPane().setBackground(COLOR_FONDO);
+        
+        // Panel central con las tres secciones
+        panelCentro = new JPanel(new GridLayout(3, 1, 10, 30));
+        panelCentro.setBackground(COLOR_FONDO);
+        panelCentro.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
+        
+        // Crear las tres secciones
+        panelCentro.add(crearSeccion("Todo", true, indiceTodo));
+        panelCentro.add(crearSeccion("Películas", false, indicePeliculas));
+        panelCentro.add(crearSeccion("Series", false, indiceSeries));
+        
+        // Panel norte con logo
+        pNorte = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        pNorte.setPreferredSize(new Dimension(900, 80));
+        pNorte.setBackground(COLOR_FONDO);
+        pNorte.setBorder(BorderFactory.createEmptyBorder(10, 30, 10, 30));
+        
+        JLabel logo = new JLabel("DEUSTOFILM");
+        logo.setForeground(COLOR_AMARILLO);
+        logo.setFont(new Font("Arial", Font.BOLD, 32));
+        pNorte.add(logo);
+        
+        getContentPane().add(panelCentro, BorderLayout.CENTER);
+        getContentPane().add(pNorte, BorderLayout.NORTH);
+        
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(950, 850);
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+    
+    private JPanel crearSeccion(String titulo, boolean mixto, int indiceInicial) {
+        // Panel principal de la sección con BorderLayout
+        JPanel seccionPanel = new JPanel(new BorderLayout(10, 10));
+        seccionPanel.setBackground(COLOR_FONDO);
+        
+        // Etiqueta del título de la sección
+        JLabel lblTitulo = new JLabel(titulo);
+        lblTitulo.setForeground(COLOR_TEXTO);
+        lblTitulo.setFont(new Font("Arial", Font.BOLD, 20));
+        seccionPanel.add(lblTitulo, BorderLayout.NORTH);
+        
+        // Panel para los items con FlowLayout
+        JPanel itemsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 5));
+        itemsPanel.setBackground(COLOR_FONDO);
+        
+        // Agregar los items (películas o series)
+        String[] contenido;
+        if (titulo.equals("Todo")) {
+            contenido = combinarArrays(peliculas, series);
+        } else if (titulo.equals("Películas")) {
+            contenido = peliculas;
+        } else {
+            contenido = series;
+        }
+        
+        // Mostrar solo ITEMS_POR_FILA items
+        for (int i = indiceInicial; i < Math.min(indiceInicial + ITEMS_POR_FILA, contenido.length); i++) {
+            JPanel item = crearItem(contenido[i]);
+            itemsPanel.add(item);
+        }
+        
+        seccionPanel.add(itemsPanel, BorderLayout.CENTER);
+        
+        // Botón de avanzar en el este
+        if (contenido.length > ITEMS_POR_FILA) {
+            JButton btnAvanzar = new JButton(">");
+            btnAvanzar.setPreferredSize(new Dimension(50, 120));
+            btnAvanzar.setFont(new Font("Arial", Font.BOLD, 24));
+            btnAvanzar.setBackground(COLOR_BOTON);
+            btnAvanzar.setForeground(COLOR_TEXTO_SECUNDARIO);
+            btnAvanzar.setFocusPainted(false);
+            btnAvanzar.setBorder(BorderFactory.createEmptyBorder());
+            
+            final String tituloFinal = titulo;
+            final String[] contenidoFinal = contenido;
+            
+            btnAvanzar.addActionListener(e -> {
+                avanzarSeccion(tituloFinal, contenidoFinal);
+            });
+            
+            btnAvanzar.addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mouseEntered(java.awt.event.MouseEvent evt) {
+                    btnAvanzar.setBackground(COLOR_BOTON_HOVER);
+                    btnAvanzar.setForeground(COLOR_TEXTO);
+                }
+                public void mouseExited(java.awt.event.MouseEvent evt) {
+                    btnAvanzar.setBackground(COLOR_BOTON);
+                    btnAvanzar.setForeground(COLOR_TEXTO_SECUNDARIO);
+                }
+            });
+            
+            seccionPanel.add(btnAvanzar, BorderLayout.EAST);
+        }
+        
+        return seccionPanel;
+    }
+    
+    private JPanel crearItem(String nombre) {
+        JPanel item = new JPanel(new BorderLayout());
+        item.setPreferredSize(new Dimension(120, 165));
+        item.setBackground(COLOR_FONDO);
+        
+        // Cuadrado vacío (aquí iría la imagen)
+        JPanel cuadrado = new JPanel();
+        cuadrado.setPreferredSize(new Dimension(120, 120));
+        cuadrado.setOpaque(true);
+        JLabel ImagenPelicula = new JLabel();
+        ImagenPelicula.setIcon(new ImageIcon("resources/images/" + nombre + ".jpeg"));
+        cuadrado.add(ImagenPelicula);
+        cuadrado.setBackground(COLOR_BOTON);
+        cuadrado.setBorder(BorderFactory.createLineBorder(COLOR_TEXTO_SECUNDARIO, 2));
+        
+        // Nombre debajo del cuadrado
+        JLabel lblNombre = new JLabel(nombre);
+        lblNombre.setHorizontalAlignment(SwingConstants.CENTER);
+        lblNombre.setFont(new Font("Arial", Font.PLAIN, 12));
+        lblNombre.setForeground(COLOR_TEXTO_SECUNDARIO);
+        lblNombre.setBorder(BorderFactory.createEmptyBorder(8, 0, 0, 0));
+        
+        item.add(cuadrado, BorderLayout.CENTER);
+        item.add(lblNombre, BorderLayout.SOUTH);
+        
+        return item;
+    }
+    
+    private String[] combinarArrays(String[] arr1, String[] arr2) {
+        String[] resultado = new String[arr1.length + arr2.length];
+        System.arraycopy(arr1, 0, resultado, 0, arr1.length);
+        System.arraycopy(arr2, 0, resultado, arr1.length, arr2.length);
+        return resultado;
+    }
+    
+    private void avanzarSeccion(String titulo, String[] contenido) {
+        if (titulo.equals("Todo")) {
+            indiceTodo = (indiceTodo + ITEMS_POR_FILA) % contenido.length;
+        } else if (titulo.equals("Películas")) {
+            indicePeliculas = (indicePeliculas + ITEMS_POR_FILA) % contenido.length;
+        } else {
+            indiceSeries = (indiceSeries + ITEMS_POR_FILA) % contenido.length;
+        }
+        
+        // Refrescar la ventana
+        panelCentro.removeAll();
+        panelCentro.add(crearSeccion("Todo", true, indiceTodo));
+        panelCentro.add(crearSeccion("Películas", false, indicePeliculas));
+        panelCentro.add(crearSeccion("Series", false, indiceSeries));
+        panelCentro.revalidate();
+        panelCentro.repaint();
+    }
+    
+    public static void main(String[] args) {
+        new VentanaPeliculasSeries();
+    }
 }
