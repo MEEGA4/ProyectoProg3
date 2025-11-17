@@ -159,7 +159,7 @@ public class VentanaTrabajador extends JFrame {
         
         btnVisualizarClientes.addActionListener(e -> {
             List<String> cols = Arrays.asList("Nombre", "Apellido", "Edad", "Ubicación", "Teléfono", "Email");
-            new VentanaClientesTabla(cols, clientes);
+            new VentanaClientesTabla(cols, clientes, true);
         });
 
         setLocationRelativeTo(null);

@@ -33,6 +33,10 @@ public class VentanaClientesTabla extends JFrame {
     private TableRowSorter<ClienteTableModel> sorter;
 
     public VentanaClientesTabla(List<String> titulos, List<Cliente> clientes) {
+        this(titulos, clientes, false);
+    }
+
+    public VentanaClientesTabla(List<String> titulos, List<Cliente> clientes, boolean adminTheme) {
         setTitle("Gestión de Clientes");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new BorderLayout());
@@ -42,6 +46,9 @@ public class VentanaClientesTabla extends JFrame {
         tabla = new JTable(modelo);
         sorter = new TableRowSorter<>(modelo);
         tabla.setRowSorter(sorter);
+        if (adminTheme) {
+            AdminTableStyler.apply(tabla);
+        }
 
         // Panel centro con tabla
         pCentro = new JPanel(new BorderLayout());

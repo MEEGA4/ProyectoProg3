@@ -45,6 +45,7 @@ public class VentanaSeriesTabla extends JFrame {
         tabla = new JTable(modelo);
         sorter = new TableRowSorter<>(modelo);
         tabla.setRowSorter(sorter);
+        AdminTableStyler.apply(tabla);
 
         // Panel centro con tabla
         pCentro = new JPanel(new BorderLayout());
