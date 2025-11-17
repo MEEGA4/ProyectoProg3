@@ -143,20 +143,60 @@ public class VentanaPeliculasSeries extends JFrame {
         return seccionPanel;
     }
     
+    /**
+     * Escala una imagen para que se ajuste perfectamente al tamaño especificado
+     * @param rutaImagen Ruta de la imagen a escalar
+     * @param ancho Ancho deseado
+     * @param alto Alto deseado
+     * @return ImageIcon con la imagen escalada, o null si hay error
+     */
+    private ImageIcon escalarImagen(String rutaImagen, int ancho, int alto) {
+        try {
+            ImageIcon iconoOriginal = new ImageIcon(rutaImagen);
+            
+            // Verificar que la imagen se cargó correctamente
+            if (iconoOriginal.getIconWidth() <= 0) {
+                return null;
+            }
+            
+            // Escalar la imagen con calidad suave
+            java.awt.Image imagenEscalada = iconoOriginal.getImage()
+                .getScaledInstance(ancho, alto, java.awt.Image.SCALE_SMOOTH);
+            
+            return new ImageIcon(imagenEscalada);
+        } catch (Exception e) {
+            System.err.println("Error al cargar imagen: " + rutaImagen);
+            return null;
+        }
+    }
+
+    // Modifica el método crearItem para usar esta función:
     private JPanel crearItem(String nombre) {
         JPanel item = new JPanel(new BorderLayout());
         item.setPreferredSize(new Dimension(120, 165));
         item.setBackground(COLOR_FONDO);
         
-        // Cuadrado vacío (aquí iría la imagen)
+        // Cuadrado con imagen escalada
         JPanel cuadrado = new JPanel();
         cuadrado.setPreferredSize(new Dimension(120, 120));
-        cuadrado.setOpaque(true);
-        JLabel ImagenPelicula = new JLabel();
-        ImagenPelicula.setIcon(new ImageIcon("resources/images/" + nombre + ".jpeg"));
-        cuadrado.add(ImagenPelicula);
+        cuadrado.setLayout(new BorderLayout()); // Cambiar layout
         cuadrado.setBackground(COLOR_BOTON);
         cuadrado.setBorder(BorderFactory.createLineBorder(COLOR_TEXTO_SECUNDARIO, 2));
+        
+        // Cargar y escalar la imagen
+        JLabel imagenPelicula = new JLabel();
+        ImageIcon iconoEscalado = escalarImagen("resources/images/" + nombre + ".jpeg", 120, 120);
+        
+        if (iconoEscalado != null) {
+            imagenPelicula.setIcon(iconoEscalado);
+        } else {
+            // Si no se puede cargar la imagen, mostrar texto
+            imagenPelicula.setText("Sin imagen");
+            imagenPelicula.setHorizontalAlignment(SwingConstants.CENTER);
+            imagenPelicula.setForeground(COLOR_TEXTO_SECUNDARIO);
+        }
+        
+        cuadrado.add(imagenPelicula, BorderLayout.CENTER);
         
         // Nombre debajo del cuadrado
         JLabel lblNombre = new JLabel(nombre);
