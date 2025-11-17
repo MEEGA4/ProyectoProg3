@@ -144,6 +144,7 @@ public class VentanaPeliculasSeries extends JFrame {
     }
     
     /**
+     * Chat GPT pero con modificaciones
      * Escala una imagen para que se ajuste perfectamente al tamaño especificado
      * @param rutaImagen Ruta de la imagen a escalar
      * @param ancho Ancho deseado
