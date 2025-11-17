@@ -129,7 +129,7 @@ public class VentanaTrabajador extends JFrame {
 
         // ===== Listeners =====
         btnSesion.addActionListener(e -> {
-            VentanaSeleccion ventana = new VentanaSeleccion();
+            VentanaSeleccionar ventana = new VentanaSeleccionar();
             ventana.setVisible(true);
             this.dispose();
         });

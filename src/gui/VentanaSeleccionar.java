@@ -27,7 +27,7 @@ import javax.swing.SwingUtilities;
 import domain.Cliente;
 import domain.Trabajador;
 
-public class VentanaSeleccion extends JFrame {
+public class VentanaSeleccionar extends JFrame {
     private static final long serialVersionUID = 1L;
     protected JButton botonCerrar, botonCliente, botonTrabajador;
     protected JPanel pAbajo, pCentro, pNorte, pFormularios;
@@ -51,7 +51,7 @@ public class VentanaSeleccion extends JFrame {
     private final Color COLOR_FONDO = new Color(33, 37, 41);
     private final Color COLOR_AMARILLO = new Color(255, 193, 7);
 
-    public VentanaSeleccion() {
+    public VentanaSeleccionar() {
         // Configuración inicial de la ventana
         ImageIcon im = new ImageIcon("resources/images/logo.png");
         setIconImage(im.getImage());

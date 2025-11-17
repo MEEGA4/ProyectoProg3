@@ -3,7 +3,7 @@ package main;
 import javax.swing.SwingUtilities;
 
 
-import gui.VentanaSeleccion;
+import gui.VentanaSeleccionar;
 
 
 public class Main {
@@ -11,7 +11,7 @@ public class Main {
 	
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(() -> {
-            VentanaSeleccion ventana = new VentanaSeleccion();
+            VentanaSeleccionar ventana = new VentanaSeleccionar();
         });
 	}
 }
