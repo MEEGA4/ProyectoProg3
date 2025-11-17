@@ -122,7 +122,8 @@ public class VentanaCliente extends JFrame {
 
         setVisible(true);
     }
-
+    
+    //Chat GPT
     private void toggleModoEdicion() {
         modoEdicion = !modoEdicion;
         if (modoEdicion) {
@@ -155,6 +156,7 @@ public class VentanaCliente extends JFrame {
         panelPerfiles.repaint();
     }
 
+    //Chat GPT
     private JPanel crearPerfil(PerfilCliente perfil, int index) {
         JPanel panel = new JPanel(new BorderLayout(0, 10));
         panel.setBackground(Color.BLACK);
@@ -326,7 +328,8 @@ public class VentanaCliente extends JFrame {
             actualizarPerfiles();
         }
     }
-
+    
+    //Chat GPT
     private void editarPerfil(int index) {
         PerfilCliente perfil = perfiles.get(index);
         
