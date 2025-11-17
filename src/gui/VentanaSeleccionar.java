@@ -311,7 +311,7 @@ public class VentanaSeleccionar extends JFrame {
     private void abrirMenuCliente() {
         SwingUtilities.invokeLater(() -> {
             Cliente cliente = (Cliente) usuarioActual;
-            new VentanaInicio(cliente);
+            new VentanaCliente(cliente);
             this.dispose();
         });
     }

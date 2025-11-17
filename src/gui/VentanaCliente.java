@@ -29,7 +29,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import domain.Cliente;
 import domain.PerfilCliente;
 
-public class VentanaInicio extends JFrame {
+public class VentanaCliente extends JFrame {
     private static final long serialVersionUID = 1L;
     private JPanel pCentro, panelPerfiles;
     private ArrayList<PerfilCliente> perfiles;
@@ -38,7 +38,7 @@ public class VentanaInicio extends JFrame {
     private JButton btnGestionarPerfiles;
     private Cliente clientePrincipal; // Cliente que inició sesión
 
-    public VentanaInicio(Cliente cliente) {
+    public VentanaCliente(Cliente cliente) {
         this.clientePrincipal = cliente;
         
         ImageIcon im = new ImageIcon("resources/images/logo.png");
