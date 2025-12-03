@@ -39,17 +39,17 @@ public class VentanaCliente extends JFrame {
     private JButton btnGestionarPerfiles;
     private Cliente clientePrincipal; // Cliente que inició sesión
     private GestorBD gestor;
-    
+
     public VentanaCliente(Cliente cliente, GestorBD gestorBD) {
         this.clientePrincipal = cliente;
         this.gestor = gestorBD;
-        
+
         ImageIcon im = new ImageIcon("resources/images/logo.png");
         setIconImage(im.getImage());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(300, 200, 900, 650);
         setLocationRelativeTo(null);
-        
+
         // Fondo negro
         getContentPane().setBackground(new Color(33, 37, 41));
 
@@ -87,7 +87,7 @@ public class VentanaCliente extends JFrame {
         // Panel con los perfiles
         panelPerfiles = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
         panelPerfiles.setBackground(new Color(33, 37, 41));
-        
+
         actualizarPerfiles();
 
         pCentro.add(panelPerfiles);
@@ -102,7 +102,7 @@ public class VentanaCliente extends JFrame {
         btnGestionarPerfiles.setFocusPainted(false);
         btnGestionarPerfiles.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
         btnGestionarPerfiles.setAlignmentX(CENTER_ALIGNMENT);
-        
+
         btnGestionarPerfiles.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -114,6 +114,7 @@ public class VentanaCliente extends JFrame {
             public void mouseEntered(MouseEvent e) {
                 btnGestionarPerfiles.setBackground(new Color(80, 80, 80));
             }
+
             public void mouseExited(MouseEvent e) {
                 btnGestionarPerfiles.setBackground(new Color(50, 50, 50));
             }
@@ -125,8 +126,8 @@ public class VentanaCliente extends JFrame {
 
         setVisible(true);
     }
-    
-    //Chat GPT
+
+    // Chat GPT
     private void toggleModoEdicion() {
         modoEdicion = !modoEdicion;
         if (modoEdicion) {
@@ -159,7 +160,7 @@ public class VentanaCliente extends JFrame {
         panelPerfiles.repaint();
     }
 
-    //Chat GPT
+    // Chat GPT
     private JPanel crearPerfil(PerfilCliente perfil, int index) {
         JPanel panel = new JPanel(new BorderLayout(0, 10));
         panel.setBackground(Color.BLACK);
@@ -171,7 +172,7 @@ public class VentanaCliente extends JFrame {
         btnPerfil.setBackground(perfil.getColor());
         btnPerfil.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
         btnPerfil.setFocusPainted(false);
-        
+
         // Si tiene imagen, mostrarla, sino mostrar emoji
         if (perfil.getImagen() != null) {
             ImageIcon icon = new ImageIcon(perfil.getImagen().getScaledInstance(130, 130, Image.SCALE_SMOOTH));
@@ -205,6 +206,7 @@ public class VentanaCliente extends JFrame {
             public void mouseEntered(MouseEvent evt) {
                 btnPerfil.setBorder(BorderFactory.createLineBorder(Color.WHITE, 3));
             }
+
             public void mouseExited(MouseEvent evt) {
                 btnPerfil.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
             }
@@ -217,18 +219,18 @@ public class VentanaCliente extends JFrame {
         lblNombre.setHorizontalAlignment(JLabel.CENTER);
 
         panel.add(btnPerfil, BorderLayout.CENTER);
-        
+
         JPanel panelSur = new JPanel();
         panelSur.setLayout(new BoxLayout(panelSur, BoxLayout.Y_AXIS));
         panelSur.setBackground(Color.BLACK);
-        
+
         lblNombre.setAlignmentX(CENTER_ALIGNMENT);
         panelSur.add(lblNombre);
 
         // Si estamos en modo edición, mostrar botón de editar
         if (modoEdicion) {
             panelSur.add(Box.createVerticalStrut(5));
-            
+
             JButton btnEditar = new JButton("✏ Editar");
             btnEditar.setBackground(new Color(50, 50, 50));
             btnEditar.setForeground(Color.LIGHT_GRAY);
@@ -236,14 +238,14 @@ public class VentanaCliente extends JFrame {
             btnEditar.setFocusPainted(false);
             btnEditar.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
             btnEditar.setAlignmentX(CENTER_ALIGNMENT);
-            
+
             btnEditar.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     editarPerfil(index);
                 }
             });
-            
+
             panelSur.add(btnEditar);
         }
 
@@ -280,6 +282,7 @@ public class VentanaCliente extends JFrame {
                 btnAnadir.setBorder(BorderFactory.createLineBorder(Color.WHITE, 3));
                 btnAnadir.setForeground(Color.WHITE);
             }
+
             public void mouseExited(MouseEvent evt) {
                 btnAnadir.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
                 btnAnadir.setForeground(Color.GRAY);
@@ -299,30 +302,29 @@ public class VentanaCliente extends JFrame {
     }
 
     private void anadirNuevoPerfil() {
-        String nombrePerfil = JOptionPane.showInputDialog(this, 
-            "Introduce el nombre del nuevo perfil:", 
-            "Nuevo Perfil", 
-            JOptionPane.PLAIN_MESSAGE);
+        String nombrePerfil = JOptionPane.showInputDialog(this,
+                "Introduce el nombre del nuevo perfil:",
+                "Nuevo Perfil",
+                JOptionPane.PLAIN_MESSAGE);
 
         if (nombrePerfil != null && !nombrePerfil.trim().isEmpty()) {
             // Crear un nuevo cliente para el perfil usando datos base del cliente principal
             Cliente nuevoCliente = new Cliente(
-                nombrePerfil.trim(), 
-                clientePrincipal.getApellido(), 
-                18, 
-                clientePrincipal.getContrasena(), 
-                clientePrincipal.getUbicacion(), 
-                clientePrincipal.getTelefono(), 
-                nombrePerfil.toLowerCase() + "@deustofilm.com"
-            );
+                    nombrePerfil.trim(),
+                    clientePrincipal.getApellido(),
+                    18,
+                    clientePrincipal.getContrasena(),
+                    clientePrincipal.getUbicacion(),
+                    clientePrincipal.getTelefono(),
+                    nombrePerfil.toLowerCase() + "@deustofilm.com");
 
             // Colores disponibles para los perfiles
             Color[] coloresDisponibles = {
-                new Color(51, 153, 255),
-                new Color(255, 204, 0),
-                new Color(229, 9, 20),
-                new Color(76, 117, 130),
-                new Color(153, 0, 153)
+                    new Color(51, 153, 255),
+                    new Color(255, 204, 0),
+                    new Color(229, 9, 20),
+                    new Color(76, 117, 130),
+                    new Color(153, 0, 153)
             };
 
             Color colorPerfil = coloresDisponibles[perfiles.size() % coloresDisponibles.length];
@@ -331,26 +333,27 @@ public class VentanaCliente extends JFrame {
             actualizarPerfiles();
         }
     }
-    
-    //Chat GPT
+
+    // Chat GPT
     private void editarPerfil(int index) {
         PerfilCliente perfil = perfiles.get(index);
-        
-        String[] opciones = {"Cambiar nombre", "Cambiar color", "Cambiar imagen", "Eliminar imagen", "Eliminar perfil", "Cancelar"};
+
+        String[] opciones = { "Cambiar nombre", "Cambiar color", "Cambiar imagen", "Eliminar imagen", "Eliminar perfil",
+                "Cancelar" };
         int seleccion = JOptionPane.showOptionDialog(this,
-            "¿Qué deseas modificar de " + perfil.getCliente().getNombre() + "?",
-            "Editar Perfil",
-            JOptionPane.DEFAULT_OPTION,
-            JOptionPane.QUESTION_MESSAGE,
-            null,
-            opciones,
-            opciones[0]);
+                "¿Qué deseas modificar de " + perfil.getCliente().getNombre() + "?",
+                "Editar Perfil",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                opciones,
+                opciones[0]);
 
         switch (seleccion) {
             case 0: // Cambiar nombre
                 String nuevoNombre = JOptionPane.showInputDialog(this,
-                    "Introduce el nuevo nombre:",
-                    perfil.getCliente().getNombre());
+                        "Introduce el nuevo nombre:",
+                        perfil.getCliente().getNombre());
                 if (nuevoNombre != null && !nuevoNombre.trim().isEmpty()) {
                     perfil.getCliente().setNombre(nuevoNombre.trim());
                     actualizarPerfiles();
@@ -359,8 +362,8 @@ public class VentanaCliente extends JFrame {
 
             case 1: // Cambiar color
                 Color nuevoColor = JColorChooser.showDialog(this,
-                    "Selecciona un color para el perfil",
-                    perfil.getColor());
+                        "Selecciona un color para el perfil",
+                        perfil.getColor());
                 if (nuevoColor != null) {
                     perfil.setColor(nuevoColor);
                     actualizarPerfiles();
@@ -378,7 +381,7 @@ public class VentanaCliente extends JFrame {
                 }
 
                 FileNameExtensionFilter filtro = new FileNameExtensionFilter(
-                    "Imágenes (*.jpg, *.png, *.gif)", "jpg", "png", "gif", "jpeg");
+                        "Imágenes (*.jpg, *.png, *.gif)", "jpg", "png", "gif", "jpeg");
                 fileChooser.setFileFilter(filtro);
 
                 int resultado = fileChooser.showOpenDialog(this);
@@ -398,18 +401,18 @@ public class VentanaCliente extends JFrame {
             case 4: // Eliminar perfil
                 if (perfiles.size() > 1) {
                     int confirmacion = JOptionPane.showConfirmDialog(this,
-                        "¿Estás seguro de que deseas eliminar el perfil '" + perfil.getCliente().getNombre() + "'?",
-                        "Confirmar eliminación",
-                        JOptionPane.YES_NO_OPTION);
+                            "¿Estás seguro de que deseas eliminar el perfil '" + perfil.getCliente().getNombre() + "'?",
+                            "Confirmar eliminación",
+                            JOptionPane.YES_NO_OPTION);
                     if (confirmacion == JOptionPane.YES_OPTION) {
                         perfiles.remove(index);
                         actualizarPerfiles();
                     }
                 } else {
                     JOptionPane.showMessageDialog(this,
-                        "Debe haber al menos un perfil.",
-                        "No se puede eliminar",
-                        JOptionPane.WARNING_MESSAGE);
+                            "Debe haber al menos un perfil.",
+                            "No se puede eliminar",
+                            JOptionPane.WARNING_MESSAGE);
                 }
                 break;
 
@@ -421,13 +424,13 @@ public class VentanaCliente extends JFrame {
 
     private void entrarAplicacion(PerfilCliente perfil) {
         Cliente cliente = perfil.getCliente();
-        
-        JOptionPane.showMessageDialog(this, 
-            "Entrando con el perfil: " + cliente.getNombre() + " " + cliente.getApellido(), 
-            "Acceso", 
-            JOptionPane.INFORMATION_MESSAGE);
 
-        new VentanaPeliculasSeries();
+        JOptionPane.showMessageDialog(this,
+                "Entrando con el perfil: " + cliente.getNombre() + " " + cliente.getApellido(),
+                "Acceso",
+                JOptionPane.INFORMATION_MESSAGE);
+
+        new VentanaPeliculasSeries(gestor);
         this.dispose();
     }
 }

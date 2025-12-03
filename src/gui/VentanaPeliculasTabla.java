@@ -22,6 +22,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.TableRowSorter;
 
+import db.GestorBD;
 import domain.Pelicula;
 
 public class VentanaPeliculasTabla extends JFrame {
@@ -35,8 +36,10 @@ public class VentanaPeliculasTabla extends JFrame {
     private JTable tabla;
     private PeliculaTableModel modelo;
     private TableRowSorter<PeliculaTableModel> sorter;
+    private GestorBD gestor;
 
-    public VentanaPeliculasTabla(List<String> titulos, List<Pelicula> peliculas) {
+    public VentanaPeliculasTabla(List<String> titulos, List<Pelicula> peliculas, GestorBD gestorBD) {
+        this.gestor = gestorBD;
         setTitle("Peliculas");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new BorderLayout());
@@ -71,9 +74,21 @@ public class VentanaPeliculasTabla extends JFrame {
                     sorter.setRowFilter(RowFilter.regexFilter("(?i)" + Pattern.quote(text), colNombre));
                 }
             }
-            @Override public void insertUpdate(DocumentEvent e) { updateFilter(); }
-            @Override public void removeUpdate(DocumentEvent e) { updateFilter(); }
-            @Override public void changedUpdate(DocumentEvent e) { updateFilter(); }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                updateFilter();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updateFilter();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                updateFilter();
+            }
         });
 
         // Atajos de teclado con KeyListener (Ctrl+K añadir, Ctrl+T eliminar)
@@ -103,25 +118,31 @@ public class VentanaPeliculasTabla extends JFrame {
 
     private int findNombreColumnIndex() {
         for (int i = 0; i < modelo.getColumnCount(); i++) {
-            if ("nombre".equalsIgnoreCase(modelo.getColumnName(i))) return i;
+            if ("nombre".equalsIgnoreCase(modelo.getColumnName(i)))
+                return i;
         }
         return 0; // fallback
     }
 
     private void onAddPelicula() {
         String nombre = JOptionPane.showInputDialog(this, "Nombre de la película:");
-        if (nombre == null || nombre.trim().isEmpty()) return;
+        if (nombre == null || nombre.trim().isEmpty())
+            return;
         String descripcion = JOptionPane.showInputDialog(this, "Descripción:");
-        if (descripcion == null) descripcion = "";
+        if (descripcion == null)
+            descripcion = "";
         String director = JOptionPane.showInputDialog(this, "Director:");
-        if (director == null) director = "";
+        if (director == null)
+            director = "";
         String genero = JOptionPane.showInputDialog(this, "Género:");
-        if (genero == null) genero = "";
+        if (genero == null)
+            genero = "";
 
         double precio = 0.0;
         try {
             String inp = JOptionPane.showInputDialog(this, "Precio (número):", "0.0");
-            if (inp != null && !inp.isEmpty()) precio = Double.parseDouble(inp);
+            if (inp != null && !inp.isEmpty())
+                precio = Double.parseDouble(inp);
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Precio inválido", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -130,7 +151,8 @@ public class VentanaPeliculasTabla extends JFrame {
         int stock = 0;
         try {
             String inp = JOptionPane.showInputDialog(this, "Stock (entero):", "0");
-            if (inp != null && !inp.isEmpty()) stock = Integer.parseInt(inp);
+            if (inp != null && !inp.isEmpty())
+                stock = Integer.parseInt(inp);
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Stock inválido", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -139,7 +161,8 @@ public class VentanaPeliculasTabla extends JFrame {
         int duracion = 0;
         try {
             String inp = JOptionPane.showInputDialog(this, "Duración (minutos, entero):", "0");
-            if (inp != null && !inp.isEmpty()) duracion = Integer.parseInt(inp);
+            if (inp != null && !inp.isEmpty())
+                duracion = Integer.parseInt(inp);
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Duración inválida", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -147,6 +170,11 @@ public class VentanaPeliculasTabla extends JFrame {
 
         Pelicula p = new Pelicula(nombre, descripcion, precio, stock, director, genero, duracion);
         modelo.addPelicula(p);
+
+        // Persistir en la base de datos
+        if (gestor != null) {
+            gestor.insertarPelicula(p);
+        }
     }
 
     private void onRemovePeliculas() {
@@ -155,26 +183,40 @@ public class VentanaPeliculasTabla extends JFrame {
             JOptionPane.showMessageDialog(this, "Selecciona una o más filas para eliminar.");
             return;
         }
-        int confirm = JOptionPane.showConfirmDialog(this, "¿Eliminar las películas seleccionadas?", "Confirmar", JOptionPane.YES_NO_OPTION);
-        if (confirm != JOptionPane.YES_OPTION) return;
+        int confirm = JOptionPane.showConfirmDialog(this, "¿Eliminar las películas seleccionadas?", "Confirmar",
+                JOptionPane.YES_NO_OPTION);
+        if (confirm != JOptionPane.YES_OPTION)
+            return;
 
         int[] modelRows = new int[viewRows.length];
         for (int i = 0; i < viewRows.length; i++) {
             modelRows[i] = tabla.convertRowIndexToModel(viewRows[i]);
         }
         java.util.Arrays.sort(modelRows);
+
+        // Eliminar de la base de datos antes de eliminar del modelo
+        if (gestor != null) {
+            for (int i = 0; i < modelRows.length; i++) {
+                Pelicula pelicula = modelo.getPeliculaAt(modelRows[i]);
+                if (pelicula != null && pelicula.getId() > 0) {
+                    gestor.eliminarPelicula(pelicula.getId());
+                }
+            }
+        }
+
         modelo.removeRows(modelRows);
     }
 
     // Ejecución de ejemplo
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            List<String> cols = Arrays.asList("Nombre", "Descripción", "Precio", "Stock", "Director", "Género", "Duración");
+            List<String> cols = Arrays.asList("Nombre", "Descripción", "Precio", "Stock", "Director", "Género",
+                    "Duración");
             List<Pelicula> data = new ArrayList<>();
-            data.add(new Pelicula("Inception", "Thriller de ciencia ficción", 12.99, 10, "Christopher Nolan", "Sci-Fi", 148));
+            data.add(new Pelicula("Inception", "Thriller de ciencia ficción", 12.99, 10, "Christopher Nolan", "Sci-Fi",
+                    148));
             data.add(new Pelicula("Titanic", "Drama romántico", 9.99, 5, "James Cameron", "Drama", 195));
-            new VentanaPeliculasTabla(cols, data);
+            new VentanaPeliculasTabla(cols, data, null);
         });
     }
 }
-

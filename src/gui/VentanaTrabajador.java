@@ -32,15 +32,15 @@ public class VentanaTrabajador extends JFrame {
     private JLabel labelImagenes;
 
     private GestorBD gestor;
-    
+
     public VentanaTrabajador(Trabajador trabajador, GestorBD gestorBD) {
         this.trabajador = trabajador;
         this.gestor = gestorBD;
         inicializarDatos();
 
         // ===== Colores del tema =====
-        Color colorPrincipal = new Color(33, 37, 41);  // gris carbón
-        Color colorBoton = new Color(255, 193, 7);     // dorado cálido
+        Color colorPrincipal = new Color(33, 37, 41); // gris carbón
+        Color colorBoton = new Color(255, 193, 7); // dorado cálido
         Color texto = Color.WHITE;
 
         // ===== Configuración general =====
@@ -83,7 +83,6 @@ public class VentanaTrabajador extends JFrame {
         btnUsuario = crearBotonSuperior("MI PERFIL", colorBoton, texto);
         btnSesion = crearBotonSuperior("CERRAR SESIÓN", colorBoton, texto);
         btnVolver = crearBotonSuperior("SALIR", colorBoton, texto);
-        
 
         panelSuperior.add(btnUsuario);
         panelSuperior.add(btnSesion);
@@ -140,30 +139,34 @@ public class VentanaTrabajador extends JFrame {
         btnVisualizarPeliculas.addActionListener(e -> {
             List<Pelicula> pelis = new ArrayList<>();
             for (Producto prod : productos) {
-                if (prod instanceof Pelicula) pelis.add((Pelicula) prod);
+                if (prod instanceof Pelicula)
+                    pelis.add((Pelicula) prod);
             }
-            List<String> cols = Arrays.asList("Nombre", "Descripción", "Precio", "Stock", "Director", "Género", "Duración");
-            new VentanaPeliculasTabla(cols, pelis);
+            List<String> cols = Arrays.asList("Nombre", "Descripción", "Precio", "Stock", "Director", "Género",
+                    "Duración");
+            new VentanaPeliculasTabla(cols, pelis, gestor);
         });
         btnVisualizarSeries.addActionListener(e -> {
             List<Serie> series = new ArrayList<>();
             for (Producto prod : productos) {
-                if (prod instanceof Serie) series.add((Serie) prod);
+                if (prod instanceof Serie)
+                    series.add((Serie) prod);
             }
-            List<String> cols = Arrays.asList("Nombre", "Descripción", "Precio", "Stock", "Género", "Temporadas", "Episodios");
-            new VentanaSeriesTabla(cols, series);
+            List<String> cols = Arrays.asList("Nombre", "Descripción", "Precio", "Stock", "Género", "Temporadas",
+                    "Episodios");
+            new VentanaSeriesTabla(cols, series, gestor);
         });
         btnVolver.addActionListener(e -> System.exit(0));
-        
+
         btnVisualizarProductos.addActionListener(e -> {
-            List<String> cols = Arrays.asList("Tipo", "Nombre", "Descripción", "Precio", "Stock", 
-                                              "Director", "Género", "Duración", "Temporadas", "Episodios");
-            new VentanaProductosTabla(cols, productos);
+            List<String> cols = Arrays.asList("Tipo", "Nombre", "Descripción", "Precio", "Stock",
+                    "Director", "Género", "Duración", "Temporadas", "Episodios");
+            new VentanaProductosTabla(cols, productos, gestor);
         });
-        
+
         btnVisualizarClientes.addActionListener(e -> {
             List<String> cols = Arrays.asList("Nombre", "Apellido", "Edad", "Ubicación", "Teléfono", "Email");
-            new VentanaClientesTabla(cols, clientes, true);
+            new VentanaClientesTabla(cols, clientes, true, gestor);
         });
 
         setLocationRelativeTo(null);
@@ -172,16 +175,22 @@ public class VentanaTrabajador extends JFrame {
 
     // ===== Métodos auxiliares =====
     private void inicializarDatos() {
-        clientes = new ArrayList<>();
+        // Cargar clientes desde la base de datos
+        clientes = gestor.obtenerClientes();
+
+        // Cargar productos desde la base de datos
         productos = new ArrayList<>();
-        clientes.add(new Cliente("Ana", "Martínez", 28, "1234", "Madrid",
-                "611222333", "ana@email.com"));
-        clientes.add(new Cliente("Pedro", "Sánchez", 35, "pass", "Barcelona",
-                "622333444", "pedro@email.com"));
-        productos.add(new Pelicula("Inception", "Thriller de ciencia ficción",
-                12.99, 50, "Christopher Nolan", "Sci-Fi", 148));
-        productos.add(new Serie("Breaking Bad", "Drama criminal",
-                19.99, 30, "Drama", 5));
+
+        // Obtener películas y añadirlas a productos
+        List<Pelicula> peliculas = gestor.obtenerPeliculas();
+        productos.addAll(peliculas);
+
+        // Obtener series y añadirlas a productos
+        List<Serie> series = gestor.obtenerSeries();
+        productos.addAll(series);
+
+        System.out.format("\n- Datos cargados desde BD: %d clientes, %d productos\n",
+                clientes.size(), productos.size());
     }
 
     private JButton crearBotonPrincipal(String texto, Color colorBoton, Color textoColor) {
@@ -198,6 +207,7 @@ public class VentanaTrabajador extends JFrame {
                 boton.setBackground(textoColor);
                 boton.setForeground(colorBoton);
             }
+
             @Override
             public void mouseExited(MouseEvent e) {
                 boton.setBackground(colorBoton);
@@ -209,11 +219,11 @@ public class VentanaTrabajador extends JFrame {
 
     private JButton crearBotonSuperior(String texto, Color colorBoton, Color textoColor) {
         JButton boton = new JButton(texto);
-        boton.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 18));  // Más grandes
+        boton.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 18)); // Más grandes
         boton.setBackground(colorBoton);
         boton.setForeground(textoColor);
         boton.setFocusPainted(false);
-        boton.setBorder(BorderFactory.createEmptyBorder(15, 25, 15, 25));  // Más altos y anchos
+        boton.setBorder(BorderFactory.createEmptyBorder(15, 25, 15, 25)); // Más altos y anchos
         return boton;
     }
 

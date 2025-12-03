@@ -15,11 +15,23 @@ public class SerieTableModel extends AbstractTableModel {
         this.data = series != null ? new ArrayList<>(series) : new ArrayList<>();
     }
 
-    @Override public int getRowCount() { return data.size(); }
-    @Override public int getColumnCount() { return columnas.size(); }
-    @Override public String getColumnName(int column) { return columnas.get(column); }
+    @Override
+    public int getRowCount() {
+        return data.size();
+    }
 
-    @Override public Class<?> getColumnClass(int columnIndex) {
+    @Override
+    public int getColumnCount() {
+        return columnas.size();
+    }
+
+    @Override
+    public String getColumnName(int column) {
+        return columnas.get(column);
+    }
+
+    @Override
+    public Class<?> getColumnClass(int columnIndex) {
         String name = columnas.get(columnIndex).toLowerCase();
         switch (name) {
             case "precio":
@@ -33,9 +45,13 @@ public class SerieTableModel extends AbstractTableModel {
         }
     }
 
-    @Override public boolean isCellEditable(int rowIndex, int columnIndex) { return false; }
+    @Override
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
+        return false;
+    }
 
-    @Override public Object getValueAt(int rowIndex, int columnIndex) {
+    @Override
+    public Object getValueAt(int rowIndex, int columnIndex) {
         Serie s = data.get(rowIndex);
         String name = columnas.get(columnIndex).toLowerCase();
         switch (name) {
@@ -67,7 +83,8 @@ public class SerieTableModel extends AbstractTableModel {
     }
 
     public void removeRows(int[] rows) {
-        if (rows == null || rows.length == 0) return;
+        if (rows == null || rows.length == 0)
+            return;
         for (int i = rows.length - 1; i >= 0; i--) {
             int r = rows[i];
             if (r >= 0 && r < data.size()) {
@@ -75,5 +92,12 @@ public class SerieTableModel extends AbstractTableModel {
             }
         }
         fireTableDataChanged();
+    }
+
+    public Serie getSerieAt(int index) {
+        if (index >= 0 && index < data.size()) {
+            return data.get(index);
+        }
+        return null;
     }
 }

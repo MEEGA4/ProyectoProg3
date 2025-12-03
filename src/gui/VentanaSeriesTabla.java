@@ -21,6 +21,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.TableRowSorter;
 
+import db.GestorBD;
 import domain.Serie;
 
 public class VentanaSeriesTabla extends JFrame {
@@ -34,8 +35,10 @@ public class VentanaSeriesTabla extends JFrame {
     private JTable tabla;
     private SerieTableModel modelo;
     private TableRowSorter<SerieTableModel> sorter;
+    private GestorBD gestor;
 
-    public VentanaSeriesTabla(List<String> titulos, List<Serie> series) {
+    public VentanaSeriesTabla(List<String> titulos, List<Serie> series, GestorBD gestorBD) {
+        this.gestor = gestorBD;
         setTitle("Series");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new BorderLayout());
@@ -70,9 +73,21 @@ public class VentanaSeriesTabla extends JFrame {
                     sorter.setRowFilter(RowFilter.regexFilter("(?i)" + Pattern.quote(text), colNombre));
                 }
             }
-            @Override public void insertUpdate(DocumentEvent e) { updateFilter(); }
-            @Override public void removeUpdate(DocumentEvent e) { updateFilter(); }
-            @Override public void changedUpdate(DocumentEvent e) { updateFilter(); }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                updateFilter();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updateFilter();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                updateFilter();
+            }
         });
 
         // Atajos de teclado con KeyListener (Ctrl+K añadir, Ctrl+T eliminar)
@@ -101,23 +116,28 @@ public class VentanaSeriesTabla extends JFrame {
 
     private int findNombreColumnIndex() {
         for (int i = 0; i < modelo.getColumnCount(); i++) {
-            if ("nombre".equalsIgnoreCase(modelo.getColumnName(i))) return i;
+            if ("nombre".equalsIgnoreCase(modelo.getColumnName(i)))
+                return i;
         }
         return 0;
     }
 
     private void onAddSerie() {
         String nombre = JOptionPane.showInputDialog(this, "Nombre de la serie:");
-        if (nombre == null || nombre.trim().isEmpty()) return;
+        if (nombre == null || nombre.trim().isEmpty())
+            return;
         String descripcion = JOptionPane.showInputDialog(this, "Descripción:");
-        if (descripcion == null) descripcion = "";
+        if (descripcion == null)
+            descripcion = "";
         String genero = JOptionPane.showInputDialog(this, "Género:");
-        if (genero == null) genero = "";
+        if (genero == null)
+            genero = "";
 
         double precio = 0.0;
         try {
             String inp = JOptionPane.showInputDialog(this, "Precio (número):", "0.0");
-            if (inp != null && !inp.isEmpty()) precio = Double.parseDouble(inp);
+            if (inp != null && !inp.isEmpty())
+                precio = Double.parseDouble(inp);
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Precio inválido", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -126,7 +146,8 @@ public class VentanaSeriesTabla extends JFrame {
         int stock = 0;
         try {
             String inp = JOptionPane.showInputDialog(this, "Stock (entero):", "0");
-            if (inp != null && !inp.isEmpty()) stock = Integer.parseInt(inp);
+            if (inp != null && !inp.isEmpty())
+                stock = Integer.parseInt(inp);
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Stock inválido", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -135,7 +156,8 @@ public class VentanaSeriesTabla extends JFrame {
         int temporadas = 0;
         try {
             String inp = JOptionPane.showInputDialog(this, "Temporadas (entero):", "0");
-            if (inp != null && !inp.isEmpty()) temporadas = Integer.parseInt(inp);
+            if (inp != null && !inp.isEmpty())
+                temporadas = Integer.parseInt(inp);
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Temporadas inválidas", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -144,7 +166,8 @@ public class VentanaSeriesTabla extends JFrame {
         int episodios = 0;
         try {
             String inp = JOptionPane.showInputDialog(this, "Episodios (entero):", "0");
-            if (inp != null && !inp.isEmpty()) episodios = Integer.parseInt(inp);
+            if (inp != null && !inp.isEmpty())
+                episodios = Integer.parseInt(inp);
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Episodios inválidos", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -153,6 +176,11 @@ public class VentanaSeriesTabla extends JFrame {
         Serie s = new Serie(nombre, descripcion, precio, stock, genero, temporadas);
         s.setNumEpisodios(episodios);
         modelo.addSerie(s);
+
+        // Persistir en la base de datos
+        if (gestor != null) {
+            gestor.insertarSerie(s);
+        }
     }
 
     private void onRemoveSeries() {
@@ -161,21 +189,35 @@ public class VentanaSeriesTabla extends JFrame {
             JOptionPane.showMessageDialog(this, "Selecciona una o más filas para eliminar.");
             return;
         }
-        int confirm = JOptionPane.showConfirmDialog(this, "¿Eliminar las series seleccionadas?", "Confirmar", JOptionPane.YES_NO_OPTION);
-        if (confirm != JOptionPane.YES_OPTION) return;
+        int confirm = JOptionPane.showConfirmDialog(this, "¿Eliminar las series seleccionadas?", "Confirmar",
+                JOptionPane.YES_NO_OPTION);
+        if (confirm != JOptionPane.YES_OPTION)
+            return;
 
         int[] modelRows = new int[viewRows.length];
         for (int i = 0; i < viewRows.length; i++) {
             modelRows[i] = tabla.convertRowIndexToModel(viewRows[i]);
         }
         java.util.Arrays.sort(modelRows);
+
+        // Eliminar de la base de datos antes de eliminar del modelo
+        if (gestor != null) {
+            for (int i = 0; i < modelRows.length; i++) {
+                Serie serie = modelo.getSerieAt(modelRows[i]);
+                if (serie != null && serie.getId() > 0) {
+                    gestor.eliminarSerie(serie.getId());
+                }
+            }
+        }
+
         modelo.removeRows(modelRows);
     }
 
     // Ejecución de ejemplo
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            List<String> cols = Arrays.asList("Nombre", "Descripción", "Precio", "Stock", "Género", "Temporadas", "Episodios");
+            List<String> cols = Arrays.asList("Nombre", "Descripción", "Precio", "Stock", "Género", "Temporadas",
+                    "Episodios");
             List<Serie> data = new ArrayList<>();
             Serie s1 = new Serie("Breaking Bad", "Drama criminal", 19.99, 30, "Drama", 5);
             s1.setNumEpisodios(62);
@@ -183,8 +225,7 @@ public class VentanaSeriesTabla extends JFrame {
             Serie s2 = new Serie("The Office", "Comedia", 14.99, 20, "Comedia", 9);
             s2.setNumEpisodios(201);
             data.add(s2);
-            new VentanaSeriesTabla(cols, data);
+            new VentanaSeriesTabla(cols, data, null);
         });
     }
 }
-
