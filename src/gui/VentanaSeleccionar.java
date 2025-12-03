@@ -319,7 +319,7 @@ public class VentanaSeleccionar extends JFrame {
     private void abrirMenuCliente() {
         SwingUtilities.invokeLater(() -> {
             Cliente cliente = (Cliente) usuarioActual;
-            new VentanaCliente(cliente);
+            new VentanaCliente(cliente, gestor);
             this.dispose();
         });
     }
@@ -327,7 +327,7 @@ public class VentanaSeleccionar extends JFrame {
     private void abrirMenuTrabajador() {
         SwingUtilities.invokeLater(() -> {
             Trabajador trabajador = (Trabajador) usuarioActual;
-            VentanaTrabajador ventana = new VentanaTrabajador(trabajador);
+            VentanaTrabajador ventana = new VentanaTrabajador(trabajador, gestor);
             this.dispose();
         });
     }

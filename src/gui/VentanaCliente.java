@@ -26,6 +26,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import db.GestorBD;
 import domain.Cliente;
 import domain.PerfilCliente;
 
@@ -37,9 +38,11 @@ public class VentanaCliente extends JFrame {
     private boolean modoEdicion = false;
     private JButton btnGestionarPerfiles;
     private Cliente clientePrincipal; // Cliente que inició sesión
-
-    public VentanaCliente(Cliente cliente) {
+    private GestorBD gestor;
+    
+    public VentanaCliente(Cliente cliente, GestorBD gestorBD) {
         this.clientePrincipal = cliente;
+        this.gestor = gestorBD;
         
         ImageIcon im = new ImageIcon("resources/images/logo.png");
         setIconImage(im.getImage());

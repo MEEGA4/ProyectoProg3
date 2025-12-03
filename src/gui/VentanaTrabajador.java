@@ -9,6 +9,7 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+import db.GestorBD;
 import domain.Cliente;
 import domain.Pelicula;
 import domain.Producto;
@@ -30,8 +31,11 @@ public class VentanaTrabajador extends JFrame {
     private JPanel panelHilo;
     private JLabel labelImagenes;
 
-    public VentanaTrabajador(Trabajador trabajador) {
+    private GestorBD gestor;
+    
+    public VentanaTrabajador(Trabajador trabajador, GestorBD gestorBD) {
         this.trabajador = trabajador;
+        this.gestor = gestorBD;
         inicializarDatos();
 
         // ===== Colores del tema =====
@@ -129,7 +133,7 @@ public class VentanaTrabajador extends JFrame {
 
         // ===== Listeners =====
         btnSesion.addActionListener(e -> {
-            VentanaSeleccionar ventana = new VentanaSeleccionar();
+            VentanaSeleccionar ventana = new VentanaSeleccionar(gestor);
             ventana.setVisible(true);
             this.dispose();
         });
