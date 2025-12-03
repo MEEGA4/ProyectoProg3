@@ -2,14 +2,13 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -24,6 +23,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import db.GestorBD;
 import domain.Cliente;
 import domain.Trabajador;
 
@@ -43,21 +43,24 @@ public class VentanaSeleccionar extends JFrame {
     protected JPasswordField txtContrasenaTrabajador;
     protected JLabel lblUsuarioTrabajador, lblContrasenaTrabajador;
 
-    private ArrayList<Cliente> listaClientes;
-    private ArrayList<Trabajador> listaTrabajadores;
+    private List<Cliente> listaClientes;
+    private List<Trabajador> listaTrabajadores;
     private Object usuarioActual;
     
     // Paleta de colores
     private final Color COLOR_FONDO = new Color(33, 37, 41);
     private final Color COLOR_AMARILLO = new Color(255, 193, 7);
-
-    public VentanaSeleccionar() {
+    private GestorBD gestor;
+    
+    public VentanaSeleccionar(GestorBD gestorBD) {
         // Configuración inicial de la ventana
         ImageIcon im = new ImageIcon("resources/images/logo.png");
         setIconImage(im.getImage());
         setTitle("Sistema de Gestión - Inicio de Sesión");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(300, 200, 750, 550);
+        
+        gestor = gestorBD;
         
         // Panel Norte - Logo DEUSTOFILM centrado
         pNorte = new JPanel();
@@ -107,8 +110,8 @@ public class VentanaSeleccionar extends JFrame {
         getContentPane().add(pFormularios, BorderLayout.CENTER);
         getContentPane().add(pAbajo, BorderLayout.SOUTH);
 
-        // Inicializar listas
-        inicializarListas();
+        // Cargar datos desde la BD
+        cargarDatosDesdeDB();
 
         // Listeners de los botones
         botonCerrar.addActionListener((e) -> {
@@ -117,6 +120,7 @@ public class VentanaSeleccionar extends JFrame {
                 "Confirmar salida", 
                 JOptionPane.YES_NO_OPTION);
             if (confirm == JOptionPane.YES_OPTION) {
+                gestor.closeBD();
                 System.exit(0);
             }
         });
@@ -270,20 +274,24 @@ public class VentanaSeleccionar extends JFrame {
         });
     }
 
-    private void inicializarListas() {
-        listaClientes = new ArrayList<>();
-        listaTrabajadores = new ArrayList<>();
-        
-        // Datos de ejemplo - reemplazar con carga desde BD
-        listaClientes.add(new Cliente("Juan", "Pérez", 30, "1234", "Madrid", 
-            "123456789", "juan@email.com"));
-        listaClientes.add(new Cliente("María", "García", 25, "pass123", "Barcelona", 
-            "987654321", "maria@email.com"));
-        
-        listaTrabajadores.add(new Trabajador("Carlos", "López", 35, "admin", "Madrid", 
-            "Gerente", 35000));
-        listaTrabajadores.add(new Trabajador("Ana", "Martínez", 28, "1234", "Valencia", 
-            "Vendedor", 25000));
+    private void cargarDatosDesdeDB() {
+        try {
+            // Cargar clientes y trabajadores desde la base de datos
+            listaClientes = gestor.obtenerClientes();
+            listaTrabajadores = gestor.obtenerTrabajadores();
+            
+            System.out.println("Datos cargados desde BD:");
+            System.out.println("- Clientes: " + listaClientes.size());
+            System.out.println("- Trabajadores: " + listaTrabajadores.size());
+            
+        } catch (Exception e) {
+            System.err.println("Error al cargar datos desde BD: " + e.getMessage());
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, 
+                "Error al cargar datos desde la base de datos", 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private boolean verificarCliente(String nombre, String contrasena) {

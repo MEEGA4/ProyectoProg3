@@ -5,8 +5,11 @@ import java.io.FileReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import domain.Cliente;
 import domain.Pelicula;
@@ -457,5 +460,176 @@ public class GestorBD {
 	        ex.printStackTrace();
 	    }
 	}
+	
+	// Obtener todas las películas
+	public List<Pelicula> obtenerPeliculas() {
+	    List<Pelicula> peliculas = new ArrayList<>();
+
+	    if (con == null) {
+	        System.err.println("* La conexión con la BBDD no está inicializada.");
+	        return peliculas;
+	    }
+
+	    String sql = "SELECT pl.id, pr.nombre, pr.descripcion, pr.precio, pr.stock, pl.director, pl.genero, pl.duracion " +
+	                 "FROM Pelicula pl JOIN Producto pr ON pl.producto_id = pr.id " +
+	                 "WHERE pl.id >= ?";
+
+	    try (PreparedStatement pstmt = con.prepareStatement(sql)) {
+	        pstmt.setInt(1, 0);
+
+	        ResultSet rs = pstmt.executeQuery();
+
+	        while (rs.next()) {
+	            Pelicula p = new Pelicula();
+	            p.setId(rs.getInt("id"));
+	            p.setNombre(rs.getString("nombre"));
+	            p.setDescripcion(rs.getString("descripcion"));
+	            p.setPrecio(rs.getDouble("precio"));
+	            p.setStock(rs.getInt("stock"));
+	            p.setDirector(rs.getString("director"));
+	            p.setGenero(rs.getString("genero"));
+	            p.setDuracion(rs.getInt("duracion"));
+
+	            peliculas.add(p);
+	        }
+
+	        System.out.format("\n- Se han recuperado %d películas...\n", peliculas.size());
+	        rs.close();
+
+	    } catch (Exception ex) {
+	        System.err.format("\n* Error al obtener películas de la BBDD: %s", ex.getMessage());
+	        ex.printStackTrace();
+	    }
+
+	    return peliculas;
+	}
+
+	// Obtener todas las series
+	public List<Serie> obtenerSeries() {
+	    List<Serie> series = new ArrayList<>();
+
+	    if (con == null) {
+	        System.err.println("* La conexión con la BBDD no está inicializada.");
+	        return series;
+	    }
+
+	    String sql = "SELECT s.id, pr.nombre, pr.descripcion, pr.precio, pr.stock, s.genero, s.temporadas " +
+	                 "FROM Serie s JOIN Producto pr ON s.producto_id = pr.id " +
+	                 "WHERE s.id >= ?";
+
+	    try (PreparedStatement pstmt = con.prepareStatement(sql)) {
+	        pstmt.setInt(1, 0);
+
+	        ResultSet rs = pstmt.executeQuery();
+
+	        while (rs.next()) {
+	            Serie s = new Serie();
+	            s.setId(rs.getInt("id"));
+	            s.setNombre(rs.getString("nombre"));
+	            s.setDescripcion(rs.getString("descripcion"));
+	            s.setPrecio(rs.getDouble("precio"));
+	            s.setStock(rs.getInt("stock"));
+	            s.setGenero(rs.getString("genero"));
+	            s.setTemporadas(rs.getInt("temporadas"));
+
+	            series.add(s);
+	        }
+
+	        System.out.format("\n- Se han recuperado %d series...\n", series.size());
+	        rs.close();
+
+	    } catch (Exception ex) {
+	        System.err.format("\n* Error al obtener series de la BBDD: %s", ex.getMessage());
+	        ex.printStackTrace();
+	    }
+
+	    return series;
+	}
+	
+	public List<Cliente> obtenerClientes() {
+	    List<Cliente> clientes = new ArrayList<>();
+
+	    if (con == null) {
+	        System.err.println("* La conexión con la BBDD no está inicializada.");
+	        return clientes;
+	    }
+
+	    String sql = "SELECT c.id, p.nombre, p.apellido, p.edad, p.contrasena, p.ubicacion, c.telefono, c.email " +
+	                 "FROM Cliente c JOIN Persona p ON c.persona_id = p.id " +
+	                 "WHERE c.id >= ?";
+
+	    try (PreparedStatement pstmt = con.prepareStatement(sql)) {
+	        pstmt.setInt(1, 0);
+
+	        ResultSet rs = pstmt.executeQuery();
+
+	        while (rs.next()) {
+	            Cliente c = new Cliente();
+	            c.setId(rs.getInt("id"));
+	            c.setNombre(rs.getString("nombre"));
+	            c.setApellido(rs.getString("apellido"));
+	            c.setEdad(rs.getInt("edad"));
+	            c.setContrasena(rs.getString("contrasena"));
+	            c.setUbicacion(rs.getString("ubicacion"));
+	            c.setTelefono(rs.getString("telefono"));
+	            c.setEmail(rs.getString("email"));
+
+	            clientes.add(c);
+	        }
+
+	        System.out.format("\n- Se han recuperado %d clientes...\n", clientes.size());
+	        rs.close();
+
+	    } catch (Exception ex) {
+	        System.err.format("\n* Error al obtener clientes de la BBDD: %s", ex.getMessage());
+	        ex.printStackTrace();
+	    }
+
+	    return clientes;
+	}
+
+	public List<Trabajador> obtenerTrabajadores() {
+	    List<Trabajador> trabajadores = new ArrayList<>();
+
+	    if (con == null) {
+	        System.err.println("* La conexión con la BBDD no está inicializada.");
+	        return trabajadores;
+	    }
+
+	    String sql = "SELECT t.id, p.nombre, p.apellido, p.edad, p.contrasena, p.ubicacion, t.puesto, t.salario " +
+	                 "FROM Trabajador t JOIN Persona p ON t.persona_id = p.id " +
+	                 "WHERE t.id >= ?";
+
+	    try (PreparedStatement pstmt = con.prepareStatement(sql)) {
+	        pstmt.setInt(1, 0);
+
+	        ResultSet rs = pstmt.executeQuery();
+
+	        while (rs.next()) {
+	            Trabajador t = new Trabajador();
+	            t.setId(rs.getInt("id"));
+	            t.setNombre(rs.getString("nombre"));
+	            t.setApellido(rs.getString("apellido"));
+	            t.setEdad(rs.getInt("edad"));
+	            t.setContrasena(rs.getString("contrasena"));
+	            t.setUbicacion(rs.getString("ubicacion"));
+	            t.setPuesto(rs.getString("puesto"));
+	            t.setSalario(rs.getDouble("salario"));
+
+	            trabajadores.add(t);
+	        }
+
+	        System.out.format("\n- Se han recuperado %d trabajadores...\n", trabajadores.size());
+	        rs.close();
+
+	    } catch (Exception ex) {
+	        System.err.format("\n* Error al obtener trabajadores de la BBDD: %s", ex.getMessage());
+	        ex.printStackTrace();
+	    }
+
+	    return trabajadores;
+	}
+
+
 	
 }
