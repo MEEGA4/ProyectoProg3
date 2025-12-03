@@ -156,7 +156,10 @@ public class VentanaTrabajador extends JFrame {
                     "Episodios");
             new VentanaSeriesTabla(cols, series, gestor);
         });
-        btnVolver.addActionListener(e -> System.exit(0));
+        btnVolver.addActionListener(e ->{
+        	System.exit(0);
+        	gestor.closeBD();
+        });
 
         btnVisualizarProductos.addActionListener(e -> {
             List<String> cols = Arrays.asList("Tipo", "Nombre", "Descripción", "Precio", "Stock",
