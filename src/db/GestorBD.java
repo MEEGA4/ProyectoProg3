@@ -165,17 +165,13 @@ public class GestorBD {
 	public void cargarSeriesDesdeCSV(String rutaArchivo) {
 		try (BufferedReader br = new BufferedReader(new FileReader(rutaArchivo))) {
 			String linea;
-			boolean primeraLinea = true;
+			
 			int contador = 0;
 
 			System.out.println("\n- Cargando series desde CSV...");
 
 			while ((linea = br.readLine()) != null) {
-				// Saltar la primera línea (encabezados)
-				if (primeraLinea) {
-					primeraLinea = false;
-					continue;
-				}
+				
 
 				// Dividir la línea por coma
 				String[] datos = linea.split(",");
@@ -206,17 +202,13 @@ public class GestorBD {
 	public void cargarClientesDesdeCSV(String rutaArchivo) {
 		try (BufferedReader br = new BufferedReader(new FileReader(rutaArchivo))) {
 			String linea;
-			boolean primeraLinea = true;
+			
 			int contador = 0;
 
 			System.out.println("\n- Cargando clientes desde CSV...");
 
 			while ((linea = br.readLine()) != null) {
-				// Saltar la primera línea (encabezados)
-				if (primeraLinea) {
-					primeraLinea = false;
-					continue;
-				}
+				
 
 				// Dividir la línea por coma
 				String[] datos = linea.split(",");
@@ -248,17 +240,13 @@ public class GestorBD {
 	public void cargarTrabajadoresDesdeCSV(String rutaArchivo) {
 		try (BufferedReader br = new BufferedReader(new FileReader(rutaArchivo))) {
 			String linea;
-			boolean primeraLinea = true;
+			
 			int contador = 0;
 
 			System.out.println("\n- Cargando trabajadores desde CSV...");
 
 			while ((linea = br.readLine()) != null) {
-				// Saltar la primera línea (encabezados)
-				if (primeraLinea) {
-					primeraLinea = false;
-					continue;
-				}
+				
 
 				// Dividir la línea por coma
 				String[] datos = linea.split(",");

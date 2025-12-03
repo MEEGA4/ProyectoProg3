@@ -25,7 +25,7 @@ public class Main {
 //		gestor.cargarPeliculasDesdeCSV("resources/data/peliculas.csv");
 
 		// Cerrar la conexión después de cargar los datos
-		gestor.closeBD();
+		//gestor.closeBD();
 
 		SwingUtilities.invokeLater(() -> {
 			VentanaSeleccionar ventana = new VentanaSeleccionar(gestor);
