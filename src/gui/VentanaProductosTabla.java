@@ -3,6 +3,8 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -110,6 +112,14 @@ public class VentanaProductosTabla extends JFrame {
 
         setBounds(300, 200, 1000, 600);
         setLocationRelativeTo(null);
+
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent windowEvent) {
+                gestor.closeBD();
+            }
+        });
+
         setVisible(true);
     }
 
