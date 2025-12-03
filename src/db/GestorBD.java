@@ -1,5 +1,7 @@
 package db;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -116,7 +118,7 @@ public class GestorBD {
 	
 	// Cargar Películas desde CSV
 	public void cargarPeliculasDesdeCSV(String rutaArchivo) {
-	    try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(rutaArchivo))) {
+	    try (BufferedReader br = new BufferedReader(new FileReader(rutaArchivo))) {
 	        String linea;
 	        boolean primeraLinea = true;
 	        int contador = 0;
@@ -158,7 +160,7 @@ public class GestorBD {
 
 	// Cargar Series desde CSV
 	public void cargarSeriesDesdeCSV(String rutaArchivo) {
-	    try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(rutaArchivo))) {
+	    try (BufferedReader br = new BufferedReader(new FileReader(rutaArchivo))) {
 	        String linea;
 	        boolean primeraLinea = true;
 	        int contador = 0;
@@ -199,7 +201,7 @@ public class GestorBD {
 
 	// Cargar Clientes desde CSV
 	public void cargarClientesDesdeCSV(String rutaArchivo) {
-	    try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(rutaArchivo))) {
+	    try (BufferedReader br = new BufferedReader(new FileReader(rutaArchivo))) {
 	        String linea;
 	        boolean primeraLinea = true;
 	        int contador = 0;
@@ -241,7 +243,7 @@ public class GestorBD {
 
 	// Cargar Trabajadores desde CSV
 	public void cargarTrabajadoresDesdeCSV(String rutaArchivo) {
-	    try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(rutaArchivo))) {
+	    try (BufferedReader br = new BufferedReader(new FileReader(rutaArchivo))) {
 	        String linea;
 	        boolean primeraLinea = true;
 	        int contador = 0;
