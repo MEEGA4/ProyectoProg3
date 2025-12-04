@@ -319,7 +319,9 @@ public class VentanaSeleccionar extends JFrame {
     private void abrirMenuCliente() {
         SwingUtilities.invokeLater(() -> {
             Cliente cliente = (Cliente) usuarioActual;
-            new VentanaCliente(cliente, gestor);
+            // Abrir ProgressBar en lugar del menú directamente
+            ProgressBar progressBar = new ProgressBar(cliente, true, gestor);
+            progressBar.setVisible(true);
             this.dispose();
         });
     }
@@ -327,8 +329,26 @@ public class VentanaSeleccionar extends JFrame {
     private void abrirMenuTrabajador() {
         SwingUtilities.invokeLater(() -> {
             Trabajador trabajador = (Trabajador) usuarioActual;
-            VentanaTrabajador ventana = new VentanaTrabajador(trabajador, gestor);
+            // Abrir ProgressBar en lugar del menú directamente
+            ProgressBar progressBar = new ProgressBar(trabajador, false, gestor);
+            progressBar.setVisible(true);
             this.dispose();
         });
     }
+    
+//    private void abrirMenuCliente() {
+//        SwingUtilities.invokeLater(() -> {
+//            Cliente cliente = (Cliente) usuarioActual;
+//            new VentanaCliente(cliente, gestor);
+//            this.dispose();
+//        });
+//    }
+//
+//    private void abrirMenuTrabajador() {
+//        SwingUtilities.invokeLater(() -> {
+//            Trabajador trabajador = (Trabajador) usuarioActual;
+//            VentanaTrabajador ventana = new VentanaTrabajador(trabajador, gestor);
+//            this.dispose();
+//        });
+//    }
 }
