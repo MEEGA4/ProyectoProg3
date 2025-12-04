@@ -144,7 +144,7 @@ public class VentanaTrabajador extends JFrame {
             }
             List<String> cols = Arrays.asList("Nombre", "Descripción", "Precio", "Stock", "Director", "Género",
                     "Duración");
-            new VentanaPeliculasTabla(cols, pelis, gestor);
+            new VentanaPeliculasTabla(cols, pelis, gestor, trabajador);
         });
         btnVisualizarSeries.addActionListener(e -> {
             List<Serie> series = new ArrayList<>();
@@ -154,7 +154,7 @@ public class VentanaTrabajador extends JFrame {
             }
             List<String> cols = Arrays.asList("Nombre", "Descripción", "Precio", "Stock", "Género", "Temporadas",
                     "Episodios");
-            new VentanaSeriesTabla(cols, series, gestor);
+            new VentanaSeriesTabla(cols, series, gestor, trabajador);
         });
         btnVolver.addActionListener(e ->{
         	System.exit(0);
@@ -164,7 +164,7 @@ public class VentanaTrabajador extends JFrame {
         btnVisualizarProductos.addActionListener(e -> {
             List<String> cols = Arrays.asList("Tipo", "Nombre", "Descripción", "Precio", "Stock",
                     "Director", "Género", "Duración", "Temporadas", "Episodios");
-            new VentanaProductosTabla(cols, productos, gestor);
+            new VentanaProductosTabla(cols, productos, gestor, trabajador);
         });
 
         btnVisualizarClientes.addActionListener(e -> {

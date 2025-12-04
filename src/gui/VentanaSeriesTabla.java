@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -25,6 +26,7 @@ import javax.swing.table.TableRowSorter;
 
 import db.GestorBD;
 import domain.Serie;
+import domain.Trabajador;
 
 public class VentanaSeriesTabla extends JFrame {
 
@@ -32,15 +34,19 @@ public class VentanaSeriesTabla extends JFrame {
 
     private JPanel pNorte;
     private JPanel pCentro;
+    private JPanel pSur;
+    private JButton btnCerrar;
     private JLabel lblAtajos;
     private JTextField txtFiltro;
     private JTable tabla;
     private SerieTableModel modelo;
     private TableRowSorter<SerieTableModel> sorter;
     private GestorBD gestor;
+    private Trabajador trabajador;
 
-    public VentanaSeriesTabla(List<String> titulos, List<Serie> series, GestorBD gestorBD) {
+    public VentanaSeriesTabla(List<String> titulos, List<Serie> series, GestorBD gestorBD, Trabajador trabajador) {
         this.gestor = gestorBD;
+        this.trabajador = trabajador;
         setTitle("Series");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new BorderLayout());
@@ -63,7 +69,17 @@ public class VentanaSeriesTabla extends JFrame {
         txtFiltro.setToolTipText("Filtrar por nombre de serie");
         pNorte.add(lblAtajos, BorderLayout.WEST);
         pNorte.add(txtFiltro, BorderLayout.CENTER);
-
+        
+        
+        // Panel sur con botón cerrar
+        pSur = new JPanel();
+        btnCerrar = new JButton("VOLVER");
+        btnCerrar.addActionListener((e) -> {
+        	new VentanaTrabajador(trabajador, gestorBD);
+        	this.dispose();
+        });
+        pSur.add(btnCerrar);
+        
         // Filtro por nombre
         txtFiltro.getDocument().addDocumentListener(new DocumentListener() {
             private void updateFilter() {
@@ -110,6 +126,7 @@ public class VentanaSeriesTabla extends JFrame {
 
         getContentPane().add(pNorte, BorderLayout.NORTH);
         getContentPane().add(pCentro, BorderLayout.CENTER);
+        getContentPane().add(pSur, BorderLayout.SOUTH);
 
         setBounds(300, 200, 900, 600);
         setLocationRelativeTo(null);
@@ -223,19 +240,19 @@ public class VentanaSeriesTabla extends JFrame {
         modelo.removeRows(modelRows);
     }
 
-    // Ejecución de ejemplo
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            List<String> cols = Arrays.asList("Nombre", "Descripción", "Precio", "Stock", "Género", "Temporadas",
-                    "Episodios");
-            List<Serie> data = new ArrayList<>();
-            Serie s1 = new Serie("Breaking Bad", "Drama criminal", 19.99, 30, "Drama", 5);
-            s1.setNumEpisodios(62);
-            data.add(s1);
-            Serie s2 = new Serie("The Office", "Comedia", 14.99, 20, "Comedia", 9);
-            s2.setNumEpisodios(201);
-            data.add(s2);
-            new VentanaSeriesTabla(cols, data, null);
-        });
-    }
+//    // Ejecución de ejemplo
+//    public static void main(String[] args) {
+//        SwingUtilities.invokeLater(() -> {
+//            List<String> cols = Arrays.asList("Nombre", "Descripción", "Precio", "Stock", "Género", "Temporadas",
+//                    "Episodios");
+//            List<Serie> data = new ArrayList<>();
+//            Serie s1 = new Serie("Breaking Bad", "Drama criminal", 19.99, 30, "Drama", 5);
+//            s1.setNumEpisodios(62);
+//            data.add(s1);
+//            Serie s2 = new Serie("The Office", "Comedia", 14.99, 20, "Comedia", 9);
+//            s2.setNumEpisodios(201);
+//            data.add(s2);
+//            new VentanaSeriesTabla(cols, data, null);
+//        });
+//    }
 }

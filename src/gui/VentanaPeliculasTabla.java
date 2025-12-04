@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -26,22 +27,27 @@ import javax.swing.table.TableRowSorter;
 
 import db.GestorBD;
 import domain.Pelicula;
+import domain.Trabajador;
 
 public class VentanaPeliculasTabla extends JFrame {
 
     private static final long serialVersionUID = 1L;
 
     private JPanel pNorte;
+    private JPanel pSur;
     private JPanel pCentro;
     private JLabel lblAtajos;
+    private JButton btnCerrar;
     private JTextField txtFiltro;
     private JTable tabla;
     private PeliculaTableModel modelo;
     private TableRowSorter<PeliculaTableModel> sorter;
     private GestorBD gestor;
+    private Trabajador trabajador;
 
-    public VentanaPeliculasTabla(List<String> titulos, List<Pelicula> peliculas, GestorBD gestorBD) {
+    public VentanaPeliculasTabla(List<String> titulos, List<Pelicula> peliculas, GestorBD gestorBD, Trabajador trabajador) {
         this.gestor = gestorBD;
+        this.trabajador = trabajador;
         setTitle("Peliculas");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new BorderLayout());
@@ -65,6 +71,16 @@ public class VentanaPeliculasTabla extends JFrame {
         pNorte.add(lblAtajos, BorderLayout.WEST);
         pNorte.add(txtFiltro, BorderLayout.CENTER);
 
+     // Panel sur con botón cerrar
+        pSur = new JPanel();
+        btnCerrar = new JButton("VOLVER");
+        btnCerrar.addActionListener((e) -> {
+        	new VentanaTrabajador(trabajador, gestorBD);
+        	this.dispose();
+        });
+        pSur.add(btnCerrar);
+        
+        
         // Filtro por nombre
         txtFiltro.getDocument().addDocumentListener(new DocumentListener() {
             private void updateFilter() {
@@ -112,6 +128,7 @@ public class VentanaPeliculasTabla extends JFrame {
 
         getContentPane().add(pNorte, BorderLayout.NORTH);
         getContentPane().add(pCentro, BorderLayout.CENTER);
+        getContentPane().add(pSur, BorderLayout.SOUTH);
 
         setBounds(300, 200, 900, 600);
         setLocationRelativeTo(null);
@@ -217,16 +234,16 @@ public class VentanaPeliculasTabla extends JFrame {
         modelo.removeRows(modelRows);
     }
 
-    // Ejecución de ejemplo
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            List<String> cols = Arrays.asList("Nombre", "Descripción", "Precio", "Stock", "Director", "Género",
-                    "Duración");
-            List<Pelicula> data = new ArrayList<>();
-            data.add(new Pelicula("Inception", "Thriller de ciencia ficción", 12.99, 10, "Christopher Nolan", "Sci-Fi",
-                    148));
-            data.add(new Pelicula("Titanic", "Drama romántico", 9.99, 5, "James Cameron", "Drama", 195));
-            new VentanaPeliculasTabla(cols, data, null);
-        });
-    }
+//    // Ejecución de ejemplo
+//    public static void main(String[] args) {
+//        SwingUtilities.invokeLater(() -> {
+//            List<String> cols = Arrays.asList("Nombre", "Descripción", "Precio", "Stock", "Director", "Género",
+//                    "Duración");
+//            List<Pelicula> data = new ArrayList<>();
+//            data.add(new Pelicula("Inception", "Thriller de ciencia ficción", 12.99, 10, "Christopher Nolan", "Sci-Fi",
+//                    148));
+//            data.add(new Pelicula("Titanic", "Drama romántico", 9.99, 5, "James Cameron", "Drama", 195));
+//            new VentanaPeliculasTabla(cols, data, null);
+//        });
+//    }
 }

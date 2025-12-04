@@ -8,6 +8,7 @@ import java.awt.event.WindowEvent;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -24,6 +25,7 @@ import db.GestorBD;
 import domain.Pelicula;
 import domain.Producto;
 import domain.Serie;
+import domain.Trabajador;
 
 public class VentanaProductosTabla extends JFrame {
 
@@ -31,15 +33,19 @@ public class VentanaProductosTabla extends JFrame {
 
     private JPanel pNorte;
     private JPanel pCentro;
+    private JPanel pSur;
     private JLabel lblAtajos;
+    private JButton btnCerrar;
     private JTextField txtFiltro;
     private JTable tabla;
     private ProductoTableModel modelo;
     private TableRowSorter<ProductoTableModel> sorter;
     private GestorBD gestor;
+    private Trabajador trabajador;
 
-    public VentanaProductosTabla(List<String> titulos, List<Producto> productos, GestorBD gestorBD) {
+    public VentanaProductosTabla(List<String> titulos, List<Producto> productos, GestorBD gestorBD, Trabajador trabajador) {
         this.gestor = gestorBD;
+        this.trabajador = trabajador;
         setTitle("Gestión de Todos los Productos");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new BorderLayout());
@@ -63,6 +69,16 @@ public class VentanaProductosTabla extends JFrame {
         pNorte.add(lblAtajos, BorderLayout.WEST);
         pNorte.add(txtFiltro, BorderLayout.CENTER);
 
+        
+        // Panel sur con botón cerrar
+        pSur = new JPanel();
+        btnCerrar = new JButton("VOLVER");
+        btnCerrar.addActionListener((e) -> {
+        	new VentanaTrabajador(trabajador, gestorBD);
+        	this.dispose();
+        });
+        pSur.add(btnCerrar);
+        
         // Filtro por nombre
         txtFiltro.getDocument().addDocumentListener(new DocumentListener() {
             private void updateFilter() {
@@ -109,6 +125,7 @@ public class VentanaProductosTabla extends JFrame {
 
         getContentPane().add(pNorte, BorderLayout.NORTH);
         getContentPane().add(pCentro, BorderLayout.CENTER);
+        getContentPane().add(pSur, BorderLayout.SOUTH);
 
         setBounds(300, 200, 1000, 600);
         setLocationRelativeTo(null);
