@@ -2,126 +2,147 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
 
 import db.GestorBD;
-import domain.Persona;
 import domain.Cliente;
 import domain.Trabajador;
+import domain.Persona;
 
 public class ProgressBar extends JFrame {
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private JProgressBar bar = new JProgressBar(0, 100);
-    private JButton start = new JButton("Start");
-    private JButton pausa = new JButton("Pause");
+    private static final long serialVersionUID = 1L;
+    
+    private JProgressBar bar;
+    private JButton pausa;
     private Counter counter;
-    private JLabel label;
-    private JLabel iconLabel;
-    private Color color;
-    private Boolean finished;
+    private JLabel lblTitulo;
+    private JLabel lblEstado;
+    private Boolean finished = false;
     private Persona usuario;
-    private Boolean P ;
+    private Boolean esCliente;
     private GestorBD gestorBD;
+    
+    // Paleta de colores (mismo estilo que VentanaSeleccionar)
+    private final Color COLOR_FONDO = new Color(33, 37, 41);
+    private final Color COLOR_AMARILLO = new Color(255, 193, 7);
 
-    public ProgressBar(Persona usuario ,Boolean p, GestorBD gestorBD) {
-        // Set up the main layout
-    	this.gestorBD = gestorBD;
-    	 this.P=p;
-    	this. usuario =  usuario;
-    	 this.color = new Color(6,99,133);
-        JPanel panel = new JPanel(new BorderLayout());
-        JPanel grid = new JPanel(new BorderLayout());
-        anadirColores(grid.getComponents(), color);
-        panel.setBackground(Color.white);
+    public ProgressBar(Persona usuario, Boolean esCliente, GestorBD gestorBD) {
+        this.gestorBD = gestorBD;
+        this.esCliente = esCliente;
+        this.usuario = usuario;
         
-        // Initialize progress bar and label
-        bar.setValue(0);
-        bar.setStringPainted(true);
-        bar.setForeground(color);
-        bar.setBackground(Color.white);
-        
-        // Initialize icon label
-        iconLabel = new JLabel();
-        
-        //URL resource = "hospital.png";
-        
-
-        ImageIcon icon = new ImageIcon("resources/images/hospital.png");
-
-     // Scale the image if necessary
-     Image scaledIcon = icon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-     iconLabel.setIcon(new ImageIcon(scaledIcon));
-        // Create an overlay panel to position the icon at the bar's tip
-        JLayeredPane layeredPane = new JLayeredPane();
-        bar.setBounds(50, 60, 400, 20); // Set progress bar bounds
-        iconLabel.setBounds(50, 55, 30, 30); // Initial position of the icon above the bar
-        
-        layeredPane.add(bar, JLayeredPane.DEFAULT_LAYER);
-        layeredPane.add(iconLabel, JLayeredPane.PALETTE_LAYER);
-        layeredPane.setPreferredSize(new Dimension(500, 120));
-        
-        // Label for status text
-        label = new JLabel("Initializing...", JLabel.CENTER);
-        
-        // Add components to grid and main panel
-        grid.add(label, BorderLayout.NORTH);
-        panel.add(grid, BorderLayout.NORTH);
-        panel.add(layeredPane, BorderLayout.CENTER);
-
-        // Set up control buttons
-        JPanel buttonPanel = new JPanel();
-//        buttonPanel.add(start);
-     buttonPanel.add(pausa);
-        anadirColores(buttonPanel.getComponents(), color);
-        panel.add(buttonPanel, BorderLayout.SOUTH);
-        anadirColores(panel.getComponents(), color);
-
-        add(panel);
-
-        setSize(500, 200);
+        // Configuración de la ventana
+        ImageIcon im = new ImageIcon("resources/images/logo.png");
+        setIconImage(im.getImage());
+        setTitle("DEUSTOFILM - Cargando");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(600, 350);
         setResizable(false);
         setLocationRelativeTo(null);
-
-        // Initialize button states and listeners
-        start.setEnabled(true);
-        pausa.setEnabled(false);
-
-       // start.addActionListener(e -> startCounter());
+        
+        // Panel principal
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+        mainPanel.setBackground(COLOR_FONDO);
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(30, 50, 30, 50));
+        
+        // Logo DEUSTOFILM
+        lblTitulo = new JLabel("DEUSTOFILM");
+        lblTitulo.setForeground(COLOR_AMARILLO);
+        lblTitulo.setFont(new Font("Arial", Font.BOLD, 42));
+        lblTitulo.setAlignmentX(CENTER_ALIGNMENT);
+        mainPanel.add(lblTitulo);
+        
+        mainPanel.add(Box.createVerticalStrut(40));
+        
+        // Etiqueta de estado
+        lblEstado = new JLabel("Iniciando...");
+        lblEstado.setForeground(Color.WHITE);
+        lblEstado.setFont(new Font("Arial", Font.BOLD, 16));
+        lblEstado.setAlignmentX(CENTER_ALIGNMENT);
+        mainPanel.add(lblEstado);
+        
+        mainPanel.add(Box.createVerticalStrut(20));
+        
+        // Barra de progreso
+        bar = new JProgressBar(0, 100);
+        bar.setValue(0);
+        bar.setStringPainted(true);
+        bar.setForeground(COLOR_AMARILLO);
+        bar.setBackground(new Color(52, 58, 64));
+        bar.setFont(new Font("Arial", Font.BOLD, 14));
+        bar.setMaximumSize(new Dimension(500, 30));
+        bar.setPreferredSize(new Dimension(500, 30));
+        bar.setBorder(BorderFactory.createLineBorder(COLOR_AMARILLO, 2));
+        bar.setAlignmentX(CENTER_ALIGNMENT);
+        mainPanel.add(bar);
+        
+        mainPanel.add(Box.createVerticalStrut(30));
+        
+        // Botón pausa
+        pausa = new JButton("PAUSAR");
+        pausa.setPreferredSize(new Dimension(200, 40));
+        pausa.setMaximumSize(new Dimension(200, 40));
+        pausa.setAlignmentX(CENTER_ALIGNMENT);
+        aplicarEstiloBoton(pausa, COLOR_AMARILLO);
+        pausa.setEnabled(true);
+        mainPanel.add(pausa);
+        
+        add(mainPanel);
+        
+        // Listeners
         pausa.addActionListener(e -> pauseCounter());
+        
+        // Iniciar contador automáticamente
         startCounter();
     }
+    
+    private void aplicarEstiloBoton(JButton boton, Color color) {
+        boton.setBackground(color);
+        boton.setForeground(Color.WHITE);
+        boton.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 14));
+        boton.setFocusPainted(false);
+        boton.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        
+        boton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                boton.setBackground(Color.WHITE);
+                boton.setForeground(color);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                boton.setBackground(color);
+                boton.setForeground(Color.WHITE);
+            }
+        });
+    }
+    
     public void fin() {
-        if(finished == true) {
-            if(P == true) {
-                // Para CLIENTES
+        if(finished) {
+            if(esCliente) {
                 SwingUtilities.invokeLater(() -> {
                     VentanaCliente ventanaCliente = new VentanaCliente((Cliente)usuario, gestorBD);
-                    ventanaCliente.setVisible(true);
                     this.dispose();
                 });  
-            } else if (P == false) {
-                // Para TRABAJADORES
+            } else {
                 SwingUtilities.invokeLater(() -> {
                     VentanaTrabajador ventanaTrabajador = new VentanaTrabajador((Trabajador)usuario, gestorBD);
-                    ventanaTrabajador.setVisible(true);
                     this.dispose();
                 }); 
             }
@@ -129,9 +150,6 @@ public class ProgressBar extends JFrame {
     }
 
     public void startCounter() {
-        start.setEnabled(false);
-        pausa.setEnabled(true);
-
         if (counter == null || !counter.isAlive()) {
             counter = new Counter();
             counter.start();
@@ -141,62 +159,23 @@ public class ProgressBar extends JFrame {
     }
 
     public void pauseCounter() {
-       
-        pausa.setEnabled(true);
         if (counter != null) {
             if (counter.isPaused()) {
-                counter.resumeCounting();  // Resume the thread
-                pausa.setText("Pause");    // Update button text
+                counter.resumeCounting();
+                pausa.setText("PAUSAR");
             } else {
-                counter.pauseCounting();   // Pause the thread
-                pausa.setText("Resume");   // Update button text
+                counter.pauseCounting();
+                pausa.setText("REANUDAR");
             }
         }
-        
     }
-	private void anadirColores(Component[] components ,Color color) {
-		for(Component component :components) {
-			if(component instanceof JButton) {
-		
-			component.setBackground(color);
-			component.setForeground(Color.white);
-			component.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 12));
-			component.addMouseListener(new MouseAdapter() {
-				 
-		            @Override
-		            public void mouseEntered(MouseEvent e) {
-		            	component.setBackground(Color.white); 
-		            	component.setForeground(color);
-		            }
-
-		            @Override
-		            public void mouseExited(MouseEvent e) {
-		            	component.setBackground(color); 
-		            	component.setForeground(Color.white);
-		            }
-		        });
-			} if(component instanceof JLabel ) {
-				component.setBackground(Color.white);
-				component.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 12));
-
-			} if(component instanceof JPanel) {
-				JPanel componentN = (JPanel)component;
-				componentN.setBackground(color.white);
-				anadirColores(componentN.getComponents(), color);
-			}
-		}
-	}
-	
 
     private class Counter extends Thread {
         private int count = 0;
         private boolean paused = false;
-        
 
         @Override
         public void run() {
-            
-
             while (count <= 100 && !Thread.currentThread().isInterrupted()) {
                 synchronized (this) {
                     while (paused) {
@@ -209,32 +188,33 @@ public class ProgressBar extends JFrame {
                     }
                 }
 
+                // Actualizar texto según progreso
+                final String estado;
                 if (count >= 0 && count <= 33) {
-                    label.setText("Cargando Películas");
+                    estado = "Cargando Películas...";
                 } else if (count >= 34 && count <= 66) {
-                    label.setText("Cargando Series");
+                    estado = "Cargando Series...";
                 } else if (count >= 67 && count < 100) {
-                    label.setText("Cargando Catálogo");
-                } else if (count == 100) {
-                    label.setText("Carga Completa");
+                    estado = "Preparando Catálogo...";
+                } else {
+                    estado = "¡Carga Completa!";
                     finished = true;
-                    fin();
                 }
 
                 SwingUtilities.invokeLater(() -> {
                     bar.setValue(count);
                     bar.setString(count + "%");
-
-                    // Update icon position to move along the tip of the progress bar
-                    int barWidth = bar.getWidth();
-                    int iconX = bar.getX() + (int) ((barWidth - iconLabel.getWidth()) * (count / 100.0));
-                    iconLabel.setLocation(iconX, iconLabel.getY());
+                    lblEstado.setText(estado);
                 });
+
+                if (count == 100) {
+                    fin();
+                }
 
                 count++;
 
                 try {
-                    Thread.sleep(50); // Delay for visual effect
+                    Thread.sleep(30); // Velocidad de la barra
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     return;
@@ -250,12 +230,9 @@ public class ProgressBar extends JFrame {
             paused = false;
             notify();
         }
+        
         public synchronized boolean isPaused() {
             return paused;
         }
     }
-
-
-   
 }
-
