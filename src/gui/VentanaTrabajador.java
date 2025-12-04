@@ -145,6 +145,7 @@ public class VentanaTrabajador extends JFrame {
             List<String> cols = Arrays.asList("Nombre", "Descripción", "Precio", "Stock", "Director", "Género",
                     "Duración");
             new VentanaPeliculasTabla(cols, pelis, gestor, trabajador);
+            this.dispose();
         });
         btnVisualizarSeries.addActionListener(e -> {
             List<Serie> series = new ArrayList<>();
@@ -155,6 +156,7 @@ public class VentanaTrabajador extends JFrame {
             List<String> cols = Arrays.asList("Nombre", "Descripción", "Precio", "Stock", "Género", "Temporadas",
                     "Episodios");
             new VentanaSeriesTabla(cols, series, gestor, trabajador);
+            this.dispose();
         });
         btnVolver.addActionListener(e ->{
         	System.exit(0);
@@ -165,11 +167,13 @@ public class VentanaTrabajador extends JFrame {
             List<String> cols = Arrays.asList("Tipo", "Nombre", "Descripción", "Precio", "Stock",
                     "Director", "Género", "Duración", "Temporadas", "Episodios");
             new VentanaProductosTabla(cols, productos, gestor, trabajador);
+            this.dispose();
         });
 
         btnVisualizarClientes.addActionListener(e -> {
             List<String> cols = Arrays.asList("Nombre", "Apellido", "Edad", "Ubicación", "Teléfono", "Email");
             new VentanaClientesTabla(cols, clientes, true, gestor, trabajador);
+            this.dispose();
         });
 
         setLocationRelativeTo(null);
@@ -259,7 +263,7 @@ public class VentanaTrabajador extends JFrame {
                     "resources/images/batman.jpeg",
                     "resources/images/rocky.jpeg",
                     "resources/images/titanic.jpg",
-                    "resources/images/silencioDeLosCorderos.jpg"
+                    "resources/images/Silencio de los Corderos.jpg"
             };
 
             for (String ruta : rutas) {
