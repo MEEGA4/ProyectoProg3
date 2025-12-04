@@ -8,6 +8,7 @@ import java.awt.event.WindowEvent;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -22,6 +23,7 @@ import javax.swing.table.TableRowSorter;
 
 import db.GestorBD;
 import domain.Cliente;
+import domain.Trabajador;
 
 public class VentanaClientesTabla extends JFrame {
 
@@ -29,19 +31,23 @@ public class VentanaClientesTabla extends JFrame {
 
     private JPanel pNorte;
     private JPanel pCentro;
+    private JPanel pSur;
     private JLabel lblAtajos;
     private JTextField txtFiltro;
     private JTable tabla;
+    private JButton btnCerrar;
     private ClienteTableModel modelo;
     private TableRowSorter<ClienteTableModel> sorter;
     private GestorBD gestor;
-
-    public VentanaClientesTabla(List<String> titulos, List<Cliente> clientes, GestorBD gestorBD) {
-        this(titulos, clientes, false, gestorBD);
+    private Trabajador trabajador;
+    
+    public VentanaClientesTabla(List<String> titulos, List<Cliente> clientes, GestorBD gestorBD, Trabajador trabajador) {
+        this(titulos, clientes, false, gestorBD, trabajador);
     }
 
-    public VentanaClientesTabla(List<String> titulos, List<Cliente> clientes, boolean adminTheme, GestorBD gestorBD) {
+    public VentanaClientesTabla(List<String> titulos, List<Cliente> clientes, boolean adminTheme, GestorBD gestorBD, Trabajador trabajador) {
         this.gestor = gestorBD;
+        this.trabajador = trabajador;
         setTitle("Gestión de Clientes");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new BorderLayout());
@@ -66,6 +72,15 @@ public class VentanaClientesTabla extends JFrame {
         txtFiltro.setToolTipText("Filtrar por nombre de cliente");
         pNorte.add(lblAtajos, BorderLayout.WEST);
         pNorte.add(txtFiltro, BorderLayout.CENTER);
+
+        // Panel sur con botón cerrar
+        pSur = new JPanel();
+        btnCerrar = new JButton("VOLVER");
+        btnCerrar.addActionListener((e) -> {
+        	new VentanaTrabajador(trabajador, gestorBD);
+        	this.dispose();
+        });
+        pSur.add(btnCerrar);
 
         // Filtro por nombre
         txtFiltro.getDocument().addDocumentListener(new DocumentListener() {
@@ -113,14 +128,16 @@ public class VentanaClientesTabla extends JFrame {
 
         getContentPane().add(pNorte, BorderLayout.NORTH);
         getContentPane().add(pCentro, BorderLayout.CENTER);
+        getContentPane().add(pSur, BorderLayout.SOUTH);
 
         setBounds(300, 200, 900, 600);
         setLocationRelativeTo(null);
 
+        // Removido el windowListener que cerraba la BD
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent windowEvent) {
-                gestor.closeBD();
+                // Solo se cierra la ventana, no la base de datos
             }
         });
 
