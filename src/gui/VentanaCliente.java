@@ -10,6 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -123,6 +125,13 @@ public class VentanaCliente extends JFrame {
         pCentro.add(btnGestionarPerfiles);
 
         getContentPane().add(pCentro, BorderLayout.CENTER);
+
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent windowEvent) {
+                gestor.closeBD();
+            }
+        });
 
         setVisible(true);
     }
