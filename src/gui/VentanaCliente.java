@@ -14,6 +14,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -31,6 +32,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import db.GestorBD;
 import domain.Cliente;
 import domain.PerfilCliente;
+import domain.PerfilSecundario;
 
 public class VentanaCliente extends JFrame {
     private static final long serialVersionUID = 1L;
@@ -59,6 +61,9 @@ public class VentanaCliente extends JFrame {
         perfiles = new ArrayList<>();
         // Usar el cliente autenticado como perfil principal
         perfiles.add(new PerfilCliente(clientePrincipal, new Color(229, 9, 20), null));
+        
+        // Cargar perfiles secundarios desde la base de datos
+        cargarPerfilesSecundariosDesBD();
 
         // Panel central con todo el contenido
         pCentro = new JPanel();
@@ -317,6 +322,13 @@ public class VentanaCliente extends JFrame {
                 JOptionPane.PLAIN_MESSAGE);
 
         if (nombrePerfil != null && !nombrePerfil.trim().isEmpty()) {
+            // Guardar el perfil secundario en la base de datos
+            PerfilSecundario nuevoPerfilSecundario = new PerfilSecundario(
+                    nombrePerfil.trim(),
+                    clientePrincipal.getId()
+            );
+            gestor.insertarPerfilSecundario(nuevoPerfilSecundario);
+            
             // Crear un nuevo cliente para el perfil usando datos base del cliente principal
             Cliente nuevoCliente = new Cliente(
                     nombrePerfil.trim(),
@@ -343,6 +355,7 @@ public class VentanaCliente extends JFrame {
         }
     }
 
+
     // Chat GPT
     private void editarPerfil(int index) {
         PerfilCliente perfil = perfiles.get(index);
@@ -365,6 +378,12 @@ public class VentanaCliente extends JFrame {
                         perfil.getCliente().getNombre());
                 if (nuevoNombre != null && !nuevoNombre.trim().isEmpty()) {
                     perfil.getCliente().setNombre(nuevoNombre.trim());
+                    
+                    // Actualizar en BD si no es el perfil principal (index > 0)
+                    if (index > 0) {
+                        gestor.actualizarPerfilSecundario(perfil.getCliente().getId(), nuevoNombre.trim());
+                    }
+                    
                     actualizarPerfiles();
                 }
                 break;
@@ -409,13 +428,23 @@ public class VentanaCliente extends JFrame {
 
             case 4: // Eliminar perfil
                 if (perfiles.size() > 1) {
-                    int confirmacion = JOptionPane.showConfirmDialog(this,
-                            "¿Estás seguro de que deseas eliminar el perfil '" + perfil.getCliente().getNombre() + "'?",
-                            "Confirmar eliminación",
-                            JOptionPane.YES_NO_OPTION);
-                    if (confirmacion == JOptionPane.YES_OPTION) {
-                        perfiles.remove(index);
-                        actualizarPerfiles();
+                    if (index == 0) {
+                        JOptionPane.showMessageDialog(this,
+                                "No se puede eliminar el perfil principal.",
+                                "No se puede eliminar",
+                                JOptionPane.WARNING_MESSAGE);
+                    } else {
+                        int confirmacion = JOptionPane.showConfirmDialog(this,
+                                "¿Estás seguro de que deseas eliminar el perfil '" + perfil.getCliente().getNombre() + "'?",
+                                "Confirmar eliminación",
+                                JOptionPane.YES_NO_OPTION);
+                        if (confirmacion == JOptionPane.YES_OPTION) {
+                            // Eliminar de la BD
+                            gestor.eliminarPerfilSecundario(perfil.getCliente().getId());
+                            
+                            perfiles.remove(index);
+                            actualizarPerfiles();
+                        }
                     }
                 } else {
                     JOptionPane.showMessageDialog(this,
@@ -441,5 +470,47 @@ public class VentanaCliente extends JFrame {
 
         new VentanaPeliculasSeries(gestor);
         this.dispose();
+    }
+
+    /**
+     * Carga los perfiles secundarios del cliente desde la base de datos
+     */
+    private void cargarPerfilesSecundariosDesBD() {
+        try {
+            List<PerfilSecundario> perfilesSecundarios = gestor.obtenerPerfilesSecundarios(clientePrincipal.getId());
+            
+            // Colores disponibles para los perfiles
+            Color[] coloresDisponibles = {
+                    new Color(51, 153, 255),
+                    new Color(255, 204, 0),
+                    new Color(229, 9, 20),
+                    new Color(76, 117, 130),
+                    new Color(153, 0, 153)
+            };
+            
+            for (PerfilSecundario ps : perfilesSecundarios) {
+                // Crear un cliente temporal para el perfil
+                Cliente clientePerfil = new Cliente(
+                        ps.getNombre(),
+                        clientePrincipal.getApellido(),
+                        18,
+                        clientePrincipal.getContrasena(),
+                        clientePrincipal.getUbicacion(),
+                        clientePrincipal.getTelefono(),
+                        ps.getNombre().toLowerCase() + "@deustofilm.com");
+                
+                // Asignar ID del perfil secundario al cliente
+                clientePerfil.setId(ps.getId());
+                
+                Color colorPerfil = coloresDisponibles[perfiles.size() % coloresDisponibles.length];
+                perfiles.add(new PerfilCliente(clientePerfil, colorPerfil, null));
+            }
+            
+            System.out.println("Perfiles secundarios cargados: " + perfilesSecundarios.size());
+            
+        } catch (Exception e) {
+            System.err.println("Error al cargar perfiles secundarios: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

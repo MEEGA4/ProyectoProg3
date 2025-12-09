@@ -17,6 +17,7 @@ import domain.Persona;
 import domain.Producto;
 import domain.Serie;
 import domain.Trabajador;
+import domain.PerfilSecundario;
 
 public class GestorBD {
 
@@ -102,6 +103,13 @@ public class GestorBD {
 				+ "temporadas INTEGER,"
 				+ "FOREIGN KEY (producto_id) REFERENCES Producto(id) ON DELETE CASCADE)";
 
+		// Tabla PerfilSecundario (perfiles adicionales para un cliente)
+		String sql7 = "CREATE TABLE IF NOT EXISTS PerfilSecundario ("
+				+ "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+				+ "nombre VARCHAR(50) NOT NULL,"
+				+ "cliente_id INTEGER NOT NULL,"
+				+ "FOREIGN KEY (cliente_id) REFERENCES Cliente(id) ON DELETE CASCADE)";
+
 		try {
 			Statement st = con.createStatement();
 			st.executeUpdate(sql1);
@@ -110,6 +118,7 @@ public class GestorBD {
 			st.executeUpdate(sql4);
 			st.executeUpdate(sql5);
 			st.executeUpdate(sql6);
+			st.executeUpdate(sql7);
 			st.close();
 
 		} catch (SQLException e) {
@@ -740,6 +749,135 @@ public class GestorBD {
 			} catch (SQLException ex) {
 				ex.printStackTrace();
 			}
+		}
+	}
+
+
+	// ==================== MÉTODOS PARA PERFILES SECUNDARIOS ====================
+	
+	/**
+	 * Inserta un perfil secundario en la base de datos
+	 */
+	public void insertarPerfilSecundario(PerfilSecundario perfil) {
+		if (con == null) {
+			System.err.println("* La conexión con la BBDD no está inicializada.");
+			return;
+		}
+		
+		try {
+			String sql = "INSERT INTO PerfilSecundario (nombre, cliente_id) VALUES (?, ?)";
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			
+			pstmt.setString(1, perfil.getNombre());
+			pstmt.setInt(2, perfil.getClienteId());
+			
+			if (1 == pstmt.executeUpdate()) {
+				System.out.format("\n- Perfil secundario insertado: %s", perfil.toString());
+			} else {
+				System.out.format("\n- No se ha insertado el perfil secundario: %s", perfil.toString());
+			}
+			
+			pstmt.close();
+		} catch (SQLException e) {
+			System.err.format("\n* Error al insertar perfil secundario: %s", e.getMessage());
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Obtiene todos los perfiles secundarios de un cliente
+	 */
+	public List<PerfilSecundario> obtenerPerfilesSecundarios(int clienteId) {
+		List<PerfilSecundario> perfiles = new ArrayList<>();
+		
+		if (con == null) {
+			System.err.println("* La conexión con la BBDD no está inicializada.");
+			return perfiles;
+		}
+		
+		String sql = "SELECT id, nombre, cliente_id FROM PerfilSecundario WHERE cliente_id = ?";
+		
+		try (PreparedStatement pstmt = con.prepareStatement(sql)) {
+			pstmt.setInt(1, clienteId);
+			ResultSet rs = pstmt.executeQuery();
+			
+			while (rs.next()) {
+				PerfilSecundario perfil = new PerfilSecundario();
+				perfil.setId(rs.getInt("id"));
+				perfil.setNombre(rs.getString("nombre"));
+				perfil.setClienteId(rs.getInt("cliente_id"));
+				
+				perfiles.add(perfil);
+			}
+			
+			System.out.format("\n- Se han recuperado %d perfiles secundarios para el cliente %d\n", perfiles.size(), clienteId);
+			rs.close();
+			
+		} catch (SQLException e) {
+			System.err.format("\n* Error al obtener perfiles secundarios: %s", e.getMessage());
+			e.printStackTrace();
+		}
+		
+		return perfiles;
+	}
+	
+	/**
+	 * Actualiza el nombre de un perfil secundario
+	 */
+	public void actualizarPerfilSecundario(int perfilId, String nuevoNombre) {
+		if (con == null) {
+			System.err.println("* La conexión con la BBDD no está inicializada.");
+			return;
+		}
+		
+		try {
+			String sql = "UPDATE PerfilSecundario SET nombre = ? WHERE id = ?";
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			
+			pstmt.setString(1, nuevoNombre);
+			pstmt.setInt(2, perfilId);
+			
+			int filasAfectadas = pstmt.executeUpdate();
+			
+			if (filasAfectadas > 0) {
+				System.out.format("\n- Perfil secundario actualizado correctamente: ID %d", perfilId);
+			} else {
+				System.out.format("\n- No se encontró perfil secundario con ID %d", perfilId);
+			}
+			
+			pstmt.close();
+		} catch (SQLException e) {
+			System.err.format("\n* Error al actualizar perfil secundario: %s", e.getMessage());
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Elimina un perfil secundario de la base de datos
+	 */
+	public void eliminarPerfilSecundario(int perfilId) {
+		if (con == null) {
+			System.err.println("* La conexión con la BBDD no está inicializada.");
+			return;
+		}
+		
+		try {
+			String sql = "DELETE FROM PerfilSecundario WHERE id = ?";
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt.setInt(1, perfilId);
+			
+			int filasAfectadas = pstmt.executeUpdate();
+			
+			if (filasAfectadas > 0) {
+				System.out.format("\n- Perfil secundario eliminado correctamente: ID %d", perfilId);
+			} else {
+				System.out.format("\n- No se encontró perfil secundario con ID %d", perfilId);
+			}
+			
+			pstmt.close();
+		} catch (SQLException e) {
+			System.err.format("\n* Error al eliminar perfil secundario: %s", e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
