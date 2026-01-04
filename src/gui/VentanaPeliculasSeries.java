@@ -1,21 +1,25 @@
 package gui;
 
-import java.awt.Cursor;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
+
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
 import db.GestorBD;
 import domain.Pelicula;
@@ -99,7 +103,7 @@ public class VentanaPeliculasSeries extends JFrame {
         btnMaraton.setForeground(Color.WHITE);
         btnMaraton.setFocusPainted(false);
         btnMaraton.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
-        btnMaraton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnMaraton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         
         // Efecto hover
         btnMaraton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -150,7 +154,7 @@ public class VentanaPeliculasSeries extends JFrame {
         seccionPanel.add(lblTitulo, BorderLayout.NORTH);
 
         // Panel para los items con FlowLayout
-        JPanel itemsPanel = new JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 15, 5));
+        JPanel itemsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 5));
         itemsPanel.setBackground(COLOR_FONDO);
 
         // Agregar los items (películas o series)
@@ -207,7 +211,6 @@ public class VentanaPeliculasSeries extends JFrame {
     }
 
     /**
-     * Chat GPT pero con modificaciones
      * Escala una imagen para que se ajuste perfectamente al tamaño especificado
      * 
      * @param rutaImagen Ruta de la imagen a escalar
@@ -235,7 +238,6 @@ public class VentanaPeliculasSeries extends JFrame {
         }
     }
 
-    // Modifica el método crearItem para usar esta función:
     private JPanel crearItem(String nombre) {
         JPanel item = new JPanel(new BorderLayout());
         item.setPreferredSize(new Dimension(120, 165));
@@ -244,9 +246,10 @@ public class VentanaPeliculasSeries extends JFrame {
         // Cuadrado con imagen escalada
         JPanel cuadrado = new JPanel();
         cuadrado.setPreferredSize(new Dimension(120, 120));
-        cuadrado.setLayout(new BorderLayout()); // Cambiar layout
+        cuadrado.setLayout(new BorderLayout());
         cuadrado.setBackground(COLOR_BOTON);
         cuadrado.setBorder(BorderFactory.createLineBorder(COLOR_TEXTO_SECUNDARIO, 2));
+        cuadrado.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Cursor de mano
 
         // Cargar y escalar la imagen
         JLabel imagenPelicula = new JLabel();
@@ -262,6 +265,24 @@ public class VentanaPeliculasSeries extends JFrame {
         }
 
         cuadrado.add(imagenPelicula, BorderLayout.CENTER);
+
+        // Listener para reproducir video al hacer clic
+        cuadrado.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                reproducirTrailer(nombre);
+            }
+            
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                cuadrado.setBorder(BorderFactory.createLineBorder(COLOR_AMARILLO, 3));
+            }
+            
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                cuadrado.setBorder(BorderFactory.createLineBorder(COLOR_TEXTO_SECUNDARIO, 2));
+            }
+        });
 
         // Nombre debajo del cuadrado
         JLabel lblNombre = new JLabel(nombre);
@@ -299,5 +320,47 @@ public class VentanaPeliculasSeries extends JFrame {
         panelCentro.add(crearSeccion("Series", false, indiceSeries));
         panelCentro.revalidate();
         panelCentro.repaint();
+    }
+
+    /**
+     * Reproduce el trailer de una película/serie usando el reproductor del sistema.
+     * Se ejecuta en un hilo separado para no bloquear la interfaz.
+     * 
+     * @param nombreProducto Nombre de la película o serie
+     */
+    private void reproducirTrailer(String nombreProducto) {
+        Thread hiloReproduccion = new Thread(() -> {
+            try {
+                // Buscar video específico del producto
+                String rutaVideo = "resources/videos/" + nombreProducto + ".mp4";
+                java.io.File archivo = new java.io.File(rutaVideo);
+                
+                // Si no existe, buscar video de ejemplo
+                if (!archivo.exists()) {
+                    archivo = new java.io.File("resources/videos/trailer_ejemplo.mp4");
+                }
+                
+                if (archivo.exists()) {
+                    // Abrir con el reproductor predeterminado del sistema
+                    java.awt.Desktop.getDesktop().open(archivo);
+                    System.out.println("Reproduciendo: " + archivo.getAbsolutePath());
+                } else {
+                    // Mostrar mensaje si no hay video disponible
+                    SwingUtilities.invokeLater(() -> {
+                        JOptionPane.showMessageDialog(
+                            this,
+                            "No hay trailer disponible para: " + nombreProducto + 
+                            "\n\nColoca un archivo .mp4 en resources/videos/",
+                            "Video no encontrado",
+                            JOptionPane.INFORMATION_MESSAGE
+                        );
+                    });
+                }
+            } catch (Exception e) {
+                System.err.println("Error al reproducir video: " + e.getMessage());
+                e.printStackTrace();
+            }
+        });
+        hiloReproduccion.start();
     }
 }
