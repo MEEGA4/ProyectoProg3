@@ -1,9 +1,9 @@
 package gui;
 
+import java.awt.Cursor;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.WindowAdapter;
@@ -81,8 +81,8 @@ public class VentanaPeliculasSeries extends JFrame {
         panelCentro.add(crearSeccion("Películas", false, indicePeliculas));
         panelCentro.add(crearSeccion("Series", false, indiceSeries));
 
-        // Panel norte con logo
-        pNorte = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        // Panel norte con logo y botón maratón
+        pNorte = new JPanel(new BorderLayout());
         pNorte.setPreferredSize(new Dimension(900, 80));
         pNorte.setBackground(COLOR_FONDO);
         pNorte.setBorder(BorderFactory.createEmptyBorder(10, 30, 10, 30));
@@ -90,7 +90,37 @@ public class VentanaPeliculasSeries extends JFrame {
         JLabel logo = new JLabel("DEUSTOFILM");
         logo.setForeground(COLOR_AMARILLO);
         logo.setFont(new Font("Arial", Font.BOLD, 32));
-        pNorte.add(logo);
+        pNorte.add(logo, BorderLayout.WEST);
+        
+        // Botón de Maratón
+        JButton btnMaraton = new JButton("PLANIFICAR MARATÓN");
+        btnMaraton.setFont(new Font("Arial", Font.BOLD, 14));
+        btnMaraton.setBackground(COLOR_AMARILLO);
+        btnMaraton.setForeground(Color.WHITE);
+        btnMaraton.setFocusPainted(false);
+        btnMaraton.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        btnMaraton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        
+        // Efecto hover
+        btnMaraton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnMaraton.setBackground(Color.WHITE);
+                btnMaraton.setForeground(COLOR_AMARILLO);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnMaraton.setBackground(COLOR_AMARILLO);
+                btnMaraton.setForeground(Color.WHITE);
+            }
+        });
+        
+        // Listener para abrir ventana de maratón
+        btnMaraton.addActionListener(e -> {
+            List<Pelicula> listaPelis = gestor.obtenerPeliculas();
+            List<Serie> listaSer = gestor.obtenerSeries();
+            new VentanaMaraton(gestor, listaPelis, listaSer);
+        });
+        
+        pNorte.add(btnMaraton, BorderLayout.EAST);
 
         getContentPane().add(panelCentro, BorderLayout.CENTER);
         getContentPane().add(pNorte, BorderLayout.NORTH);
@@ -120,7 +150,7 @@ public class VentanaPeliculasSeries extends JFrame {
         seccionPanel.add(lblTitulo, BorderLayout.NORTH);
 
         // Panel para los items con FlowLayout
-        JPanel itemsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 5));
+        JPanel itemsPanel = new JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 15, 5));
         itemsPanel.setBackground(COLOR_FONDO);
 
         // Agregar los items (películas o series)
@@ -269,12 +299,5 @@ public class VentanaPeliculasSeries extends JFrame {
         panelCentro.add(crearSeccion("Series", false, indiceSeries));
         panelCentro.revalidate();
         panelCentro.repaint();
-    }
-
-    public static void main(String[] args) {
-        // Para pruebas: crear una instancia temporal de GestorBD
-        GestorBD gestorTemp = new GestorBD();
-        gestorTemp.initBD("resources/db/videoclub.db");
-        new VentanaPeliculasSeries(gestorTemp);
     }
 }
