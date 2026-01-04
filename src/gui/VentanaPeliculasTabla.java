@@ -33,6 +33,7 @@ public class VentanaPeliculasTabla extends JFrame {
     private GestorBD gestor;
     private Trabajador trabajador;
 
+    
     // Paleta de colores (Tema: Carbón y Dorado)
     private final Color COLOR_FONDO = new Color(33, 37, 41);
     private final Color COLOR_ACCENTO = new Color(255, 193, 7);
@@ -44,6 +45,9 @@ public class VentanaPeliculasTabla extends JFrame {
         this.gestor = gestorBD;
         this.trabajador = trabajador;
 
+        
+        
+        
         // Configuración básica de la ventana
         setUndecorated(true); // Quitamos bordes del sistema
         setTitle("Gestión de Películas");
