@@ -131,6 +131,12 @@ public class VentanaTrabajador extends JFrame {
         panelPrincipal.add(panelInferior, BorderLayout.SOUTH);
 
         // ===== Listeners =====
+        
+        // Botón MI PERFIL - Abre la ventana de perfil del trabajador
+        btnUsuario.addActionListener(e -> {
+            new VentanaPerfilTrabajador(this, trabajador);
+        });
+        
         btnSesion.addActionListener(e -> {
             VentanaSeleccionar ventana = new VentanaSeleccionar(gestor);
             ventana.setVisible(true);
@@ -262,8 +268,8 @@ public class VentanaTrabajador extends JFrame {
             String[] rutas = {
                     "resources/images/batman.jpeg",
                     "resources/images/rocky.jpeg",
-                    "resources/images/titanic.jpg",
-                    "resources/images/Silencio de los Corderos.jpg"
+                    "resources/images/titanic.jpeg",
+                    "resources/images/Silencio de los Corderos.jpeg"
             };
 
             for (String ruta : rutas) {
