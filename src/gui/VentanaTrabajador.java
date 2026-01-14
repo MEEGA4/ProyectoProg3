@@ -42,7 +42,10 @@ public class VentanaTrabajador extends JFrame {
         Color colorPrincipal = new Color(33, 37, 41); // gris carbón
         Color colorBoton = new Color(255, 193, 7); // dorado cálido
         Color texto = Color.WHITE;
-
+        
+        ImageIcon im = new ImageIcon("resources/images/logo.png");
+        setIconImage(im.getImage());
+        
         // ===== Configuración general =====
         setTitle("Panel Trabajador - " + trabajador.getNombre());
         setUndecorated(true);

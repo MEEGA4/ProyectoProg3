@@ -46,7 +46,8 @@ public class VentanaPeliculasTabla extends JFrame {
         this.trabajador = trabajador;
 
         
-        
+        ImageIcon im = new ImageIcon("resources/images/logo.png");
+        setIconImage(im.getImage());
         
         // Configuración básica de la ventana
         setUndecorated(true); // Quitamos bordes del sistema

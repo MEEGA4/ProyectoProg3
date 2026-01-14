@@ -69,6 +69,9 @@ public class VentanaMaraton extends JFrame {
         for (Serie s : series) {
             System.out.println("  - " + s.getNombre() + " (" + s.getTemporadas() + " temps) - " + s.getGenero());
         }
+        
+        ImageIcon im = new ImageIcon("resources/images/logo.png");
+        setIconImage(im.getImage());
 
         // Configuración de la ventana
         setTitle("DEUSTOFILM - Planificador de Maratón");

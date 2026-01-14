@@ -21,6 +21,9 @@ public class VentanaPerfilTrabajador extends JDialog {
     public VentanaPerfilTrabajador(JFrame parent, Trabajador trabajador) {
         super(parent, "Mi Perfil", true);
         
+        ImageIcon im = new ImageIcon("resources/images/logo.png");
+        setIconImage(im.getImage());
+        
         setUndecorated(true);
         setSize(500, 450);
         setLocationRelativeTo(parent);

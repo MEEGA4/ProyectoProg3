@@ -45,7 +45,10 @@ public class VentanaProductosTabla extends JFrame {
     public VentanaProductosTabla(List<String> titulos, List<Producto> productos, GestorBD gestorBD, Trabajador trabajador) {
         this.gestor = gestorBD;
         this.trabajador = trabajador;
-
+        
+        ImageIcon im = new ImageIcon("resources/images/logo.png");
+        setIconImage(im.getImage());
+        
         // Configuración básica de la ventana
         setUndecorated(true);
         setTitle("Gestión de Todos los Productos");

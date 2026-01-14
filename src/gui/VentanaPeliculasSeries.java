@@ -53,6 +53,9 @@ public class VentanaPeliculasSeries extends JFrame {
     public VentanaPeliculasSeries(GestorBD gestorBD) {
         this.gestor = gestorBD;
 
+        ImageIcon im = new ImageIcon("resources/images/logo.png");
+        setIconImage(im.getImage());
+        
         // Cargar películas desde la base de datos
         List<Pelicula> listaPeliculas = gestor.obtenerPeliculas();
         peliculas = new String[listaPeliculas.size()];
