@@ -7,7 +7,11 @@ import java.util.List;
 import domain.Pelicula;
 
 public class PeliculaTableModel extends AbstractTableModel {
-    private final List<String> columnas;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -8111064390217507876L;
+	private final List<String> columnas;
     private final List<Pelicula> data;
 
     public PeliculaTableModel(List<String> titulos, List<Pelicula> peliculas) {

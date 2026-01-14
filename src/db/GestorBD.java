@@ -13,11 +13,9 @@ import java.util.List;
 
 import domain.Cliente;
 import domain.Pelicula;
-import domain.Persona;
-import domain.Producto;
+import domain.PerfilSecundario;
 import domain.Serie;
 import domain.Trabajador;
-import domain.PerfilSecundario;
 
 public class GestorBD {
 

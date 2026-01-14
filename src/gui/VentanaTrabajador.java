@@ -24,7 +24,7 @@ public class VentanaTrabajador extends JFrame {
     private JButton btnVisualizarSeries, btnVisualizarProductos;
     private JButton btnSesion, btnUsuario, btnVolver;
 
-    private Trabajador trabajador;
+	private Trabajador trabajador;
     private List<Cliente> clientes;
     private List<Producto> productos;
 

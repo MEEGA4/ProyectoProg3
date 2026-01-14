@@ -8,7 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PeliculaTablaTableModel extends AbstractTableModel {
-    private final String[] columnas = {"ID", "Título", "Duración (min)", "Género", "Año", "Calificación"};
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private final String[] columnas = {"ID", "Título", "Duración (min)", "Género", "Año", "Calificación"};
     private List<Pelicula> data = new ArrayList<>();
 
     public PeliculaTablaTableModel() {}

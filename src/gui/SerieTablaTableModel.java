@@ -8,7 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SerieTablaTableModel extends AbstractTableModel {
-    private final String[] columnas = {"ID", "Título", "Temporadas", "Género", "Estado"};
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private final String[] columnas = {"ID", "Título", "Temporadas", "Género", "Estado"};
     private List<Serie> data = new ArrayList<>();
 
     public SerieTablaTableModel() {}

@@ -9,7 +9,11 @@ import domain.Producto;
 import domain.Serie;
 
 public class ProductoTableModel extends AbstractTableModel {
-    private final List<String> columnas;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private final List<String> columnas;
     private final List<Producto> data;
 
     public ProductoTableModel(List<String> titulos, List<Producto> productos) {

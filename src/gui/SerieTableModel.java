@@ -7,7 +7,11 @@ import java.util.List;
 import domain.Serie;
 
 public class SerieTableModel extends AbstractTableModel {
-    private final List<String> columnas;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private final List<String> columnas;
     private final List<Serie> data;
 
     public SerieTableModel(List<String> titulos, List<Serie> series) {
